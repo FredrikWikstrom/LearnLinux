@@ -1,0 +1,73 @@
+/* LearnLinux Camp — small custom layer on top of Tailwind (Play CDN) */
+
+/* ---- Simulated terminal (Windows Terminal-inspired) ---- */
+.camp-term {
+  background: #0c0c0c;
+  border: 1px solid #3f3f46;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-family: "Cascadia Code", "Cascadia Mono", ui-monospace, Consolas, "Liberation Mono", monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #e4e4e7;
+  box-shadow: 0 20px 40px -12px rgb(0 0 0 / 0.4);
+}
+.camp-term-output { max-height: 24rem; overflow-y: auto; }
+.camp-term-line { white-space: pre-wrap; word-break: break-all; }
+.camp-term-inputrow { display: flex; gap: 0.5rem; align-items: baseline; }
+.camp-term-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: inherit;
+  font: inherit;
+  caret-color: #4cc2ff;
+}
+.camp-term-user { color: #16c60c; font-weight: 600; }
+.camp-term-colon, .camp-term-dollar { color: #a1a1aa; margin-right: 0.5rem; }
+.camp-term-path { color: #3b78ff; }
+.camp-term-cmd { color: #fafafa; }
+.camp-term-dir { color: #3b78ff; font-weight: 600; }
+.camp-term-err { color: #f87171; }
+.camp-term-ok { color: #16c60c; }
+.camp-term-task { color: #f9c74f; font-weight: 600; }
+.camp-term-muted { color: #71717a; }
+
+/* Terminal window chrome (tab bar, like Windows Terminal) */
+.term-window {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 20px 50px -12px rgb(0 0 0 / 0.35);
+  border: 1px solid rgb(63 63 70 / 0.6);
+}
+.term-window .term-titlebar {
+  background: #2b2b2b;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  font-family: "Cascadia Mono", ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: #a1a1aa;
+}
+.term-window .term-titlebar .dot {
+  width: 0.65rem; height: 0.65rem; border-radius: 9999px;
+}
+.term-window .camp-term { border: none; border-radius: 0; box-shadow: none; }
+
+/* ---- Fluent-ish details ---- */
+.acrylic {
+  backdrop-filter: blur(20px) saturate(1.4);
+  background-color: rgb(255 255 255 / 0.72);
+}
+.dark .acrylic { background-color: rgb(32 32 32 / 0.78); }
+
+/* Blinking caret for the hero fake-typing animation */
+.type-caret::after {
+  content: "▊";
+  margin-left: 2px;
+  animation: camp-blink 1s steps(1) infinite;
+  color: #4cc2ff;
+}
+@keyframes camp-blink { 50% { opacity: 0; } }

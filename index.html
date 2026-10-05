@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Linux Learning Camp for Windows Refugees</title>
+  <meta name="description" content="Learn Linux the friendly way — built for Windows users. Interactive terminal, side-by-side cmd/PowerShell comparisons.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            win: { accent: '#0067c0', accentHover: '#1975c5', bg: '#f3f3f3', darkBg: '#202020', card: '#fbfbfb', darkCard: '#2b2b2b' },
+            term: { green: '#16c60c', blue: '#3b78ff', cyan: '#4cc2ff' },
+          },
+          borderRadius: { win: '8px' },
+          fontFamily: {
+            sans: ['"Segoe UI Variable Text"', '"Segoe UI"', 'system-ui', 'sans-serif'],
+            mono: ['"Cascadia Code"', '"Cascadia Mono"', 'Consolas', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="assets/css/app.css">
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="assets/js/app.js"></script>
+</head>
+<body class="bg-win-bg dark:bg-win-darkBg text-neutral-900 dark:text-neutral-100 font-sans antialiased" hx-boost="true">
+
+  <!-- Header -->
+  <header class="acrylic sticky top-0 z-40 border-b border-black/5 dark:border-white/10">
+    <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 font-semibold">
+        <span class="text-xl">🏕️</span>
+        <span>Linux Learning Camp</span>
+        <span class="hidden sm:inline text-xs font-normal text-neutral-500 dark:text-neutral-400 mt-0.5">for Windows Refugees</span>
+      </a>
+      <nav class="flex items-center gap-1 text-sm">
+        <a href="index.html" class="px-3 py-1.5 rounded-win bg-black/5 dark:bg-white/10">Home</a>
+        <a href="learn/index.html" class="px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">Learning path</a>
+        <button onclick="CampTheme.toggle()" aria-label="Toggle theme"
+          class="ml-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">
+          <span class="dark:hidden">🌙</span><span class="hidden dark:inline">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="max-w-6xl mx-auto px-4 pt-16 pb-12 grid lg:grid-cols-2 gap-10 items-center">
+    <div>
+      <span class="inline-block text-xs font-semibold tracking-wide uppercase text-win-accent bg-win-accent/10 px-3 py-1 rounded-full">Camp is open — no prior Linux experience needed</span>
+      <h1 class="mt-4 text-4xl sm:text-5xl font-bold leading-tight tracking-tight">
+        You escaped Windows.<br>
+        <span class="text-win-accent">Now learn to live free.</span>
+      </h1>
+      <p class="mt-4 text-lg text-neutral-600 dark:text-neutral-300 max-w-xl">
+        A friendly, interactive camp that teaches Linux to Windows users. We speak your language —
+        every command is shown next to the <code class="font-mono text-sm bg-black/5 dark:bg-white/10 px-1.5 py-0.5 rounded">cmd</code>
+        or PowerShell you already know, and you practice in a safe simulated terminal.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="learn/index.html"
+           class="inline-flex items-center gap-2 bg-win-accent hover:bg-win-accentHover text-white font-semibold px-5 py-2.5 rounded-win shadow transition">
+          Start the learning path →
+        </a>
+        <a href="learn/05-terminal/01-file-operations.html"
+           class="inline-flex items-center gap-2 px-5 py-2.5 rounded-win border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/10 transition font-semibold">
+          Try a lesson
+        </a>
+      </div>
+      <p class="mt-6 text-sm text-neutral-500 dark:text-neutral-400" x-data="{rank: CampProgress.rank()}">
+        Your camp rank: <span class="font-semibold text-neutral-700 dark:text-neutral-200" x-text="rank"></span>
+      </p>
+    </div>
+
+    <!-- Animated demo terminal -->
+    <div class="term-window" x-data="{
+        lines: [
+          ['cmd', 'dir'],
+          ['out', 'Oops — that\'s cmd. On Linux we type:'],
+          ['cmd', 'ls -la'],
+          ['out', 'notes.txt  projects/  welcome.txt'],
+          ['cmd', 'cat welcome.txt'],
+          ['out', 'Welcome to the camp, fellow refugee! 🏕️'],
+        ],
+        shown: [], i: 0, typed: '',
+        start() {
+          const next = () => {
+            if (this.i >= this.lines.length) { setTimeout(() => { this.shown = []; this.i = 0; this.typed=''; this.start(); }, 4000); return; }
+            const [kind, text] = this.lines[this.i];
+            if (kind === 'cmd') {
+              let j = 0;
+              const t = setInterval(() => {
+                this.typed = text.slice(0, ++j);
+                if (j >= text.length) { clearInterval(t); this.shown.push(['cmd', text]); this.typed=''; this.i++; setTimeout(next, 600); }
+              }, 70);
+            } else { this.shown.push(this.lines[this.i]); this.i++; setTimeout(next, 700); }
+          };
+          next();
+        }
+      }" x-init="start()">
+      <div class="term-titlebar">
+        <span class="dot bg-[#ff5f57]"></span><span class="dot bg-[#febc2e]"></span><span class="dot bg-[#28c840]"></span>
+        <span class="ml-2">camper@camp-vm — bash</span>
+      </div>
+      <div class="bg-[#0c0c0c] p-4 font-mono text-sm text-neutral-200 min-h-[16rem]">
+        <template x-for="([kind, text]) in shown" :key="Math.random()">
+          <div>
+            <template x-if="kind === 'cmd'">
+              <div><span class="text-term-green font-semibold">camper@camp-vm</span><span class="text-neutral-400">:</span><span class="text-term-blue">~</span><span class="text-neutral-400">$</span> <span x-text="text"></span></div>
+            </template>
+            <template x-if="kind === 'out'"><div class="text-neutral-300" x-text="text"></div></template>
+          </div>
+        </template>
+        <div x-show="typed"><span class="text-term-green font-semibold">camper@camp-vm</span><span class="text-neutral-400">:</span><span class="text-term-blue">~</span><span class="text-neutral-400">$</span> <span class="type-caret" x-text="typed"></span></div>
+        <div x-show="!typed && i < lines.length" class="type-caret"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Windows → Linux card -->
+  <section class="max-w-6xl mx-auto px-4 py-12">
+    <h2 class="text-2xl font-bold mb-2">We translate Windows for you</h2>
+    <p class="text-neutral-600 dark:text-neutral-300 mb-6">Every concept at the camp is anchored to something you already know.</p>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-5 shadow-sm">
+        <div class="font-mono text-sm text-neutral-500 dark:text-neutral-400">C:\Users\Fredrik</div>
+        <div class="mt-1 font-mono text-term-green font-semibold">/home/fredrik</div>
+        <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-300">Your home directory — the place your files actually live.</p>
+      </div>
+      <div class="bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-5 shadow-sm">
+        <div class="font-mono text-sm text-neutral-500 dark:text-neutral-400">dir · Get-ChildItem</div>
+        <div class="mt-1 font-mono text-term-green font-semibold">ls -la</div>
+        <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-300">Listing files. Yes, everything is case-sensitive now.</p>
+      </div>
+      <div class="bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-5 shadow-sm">
+        <div class="font-mono text-sm text-neutral-500 dark:text-neutral-400">Task Manager</div>
+        <div class="mt-1 font-mono text-term-green font-semibold">htop · ps aux</div>
+        <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-300">See what's running — and kill it with style.</p>
+      </div>
+      <div class="bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-5 shadow-sm">
+        <div class="font-mono text-sm text-neutral-500 dark:text-neutral-400">Windows Update / Store</div>
+        <div class="mt-1 font-mono text-term-green font-semibold">sudo apt upgrade · flatpak</div>
+        <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-300">One command updates the OS <em>and</em> all your apps.</p>
+      </div>
+      <div class="bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-5 shadow-sm">
+        <div class="font-mono text-sm text-neutral-500 dark:text-neutral-400">The Registry</div>
+        <div class="mt-1 font-mono text-term-green font-semibold">Text files in /etc</div>
+        <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-300">Configuration you can read, back up, and version with Git.</p>
+      </div>
+      <div class="bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-5 shadow-sm">
+        <div class="font-mono text-sm text-neutral-500 dark:text-neutral-400">Services (services.msc)</div>
+        <div class="mt-1 font-mono text-term-green font-semibold">systemctl</div>
+        <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-300">Start, stop, and inspect background services.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Learning path preview -->
+  <section class="max-w-6xl mx-auto px-4 py-12">
+    <div class="flex items-end justify-between mb-6">
+      <div>
+        <h2 class="text-2xl font-bold">The camp trail</h2>
+        <p class="text-neutral-600 dark:text-neutral-300">From "what is a distro?" to scripting like a PowerShell veteran.</p>
+      </div>
+      <a href="learn/index.html" class="text-sm font-semibold text-win-accent hover:underline shrink-0">Full path →</a>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <a href="learn/index.html" class="group bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-5 hover:border-win-accent/50 transition shadow-sm">
+        <div class="text-2xl">🥾</div>
+        <h3 class="mt-2 font-semibold group-hover:text-win-accent transition">Base camp</h3>
+        <p class="text-sm text-neutral-600 dark:text-neutral-300">Try Linux safely, pick a distro, install it.</p>
+      </a>
+      <a href="learn/index.html" class="group bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-5 hover:border-win-accent/50 transition shadow-sm">
+        <div class="text-2xl">🖥️</div>
+        <h3 class="mt-2 font-semibold group-hover:text-win-accent transition">Terminal training</h3>
+        <p class="text-sm text-neutral-600 dark:text-neutral-300">20 hands-on topics, with cmd/PowerShell translations.</p>
+      </a>
+      <a href="learn/index.html" class="group bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-5 hover:border-win-accent/50 transition shadow-sm">
+        <div class="text-2xl">✍️</div>
+        <h3 class="mt-2 font-semibold group-hover:text-win-accent transition">Editors & scripting</h3>
+        <p class="text-sm text-neutral-600 dark:text-neutral-300">vim, nano, and bash for PowerShell users.</p>
+      </a>
+      <div class="bg-win-card dark:bg-win-darkCard rounded-win border border-dashed border-black/15 dark:border-white/20 p-5 opacity-70">
+        <div class="text-2xl">🚀</div>
+        <h3 class="mt-2 font-semibold">Coming soon</h3>
+        <p class="text-sm text-neutral-600 dark:text-neutral-300">Git, programming languages, containers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-black/5 dark:border-white/10 mt-12">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-neutral-500 dark:text-neutral-400 flex flex-wrap gap-4 justify-between">
+      <span>🏕️ The Linux Learning Camp for Windows Refugees</span>
+      <span>Built with Tailwind CSS · htmx · Alpine.js</span>
+    </div>
+  </footer>
+</body>
+</html>

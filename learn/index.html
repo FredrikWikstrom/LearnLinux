@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning path — Linux Learning Camp</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            win: { accent: '#0067c0', accentHover: '#1975c5', bg: '#f3f3f3', darkBg: '#202020', card: '#fbfbfb', darkCard: '#2b2b2b' },
+            term: { green: '#16c60c', blue: '#3b78ff', cyan: '#4cc2ff' },
+          },
+          borderRadius: { win: '8px' },
+          fontFamily: {
+            sans: ['"Segoe UI Variable Text"', '"Segoe UI"', 'system-ui', 'sans-serif'],
+            mono: ['"Cascadia Code"', '"Cascadia Mono"', 'Consolas', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="../assets/css/app.css">
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="../assets/js/app.js"></script>
+</head>
+<body class="bg-win-bg dark:bg-win-darkBg text-neutral-900 dark:text-neutral-100 font-sans antialiased" hx-boost="true">
+
+  <header class="acrylic sticky top-0 z-40 border-b border-black/5 dark:border-white/10">
+    <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 font-semibold">
+        <span class="text-xl">🏕️</span><span>Linux Learning Camp</span>
+      </a>
+      <nav class="flex items-center gap-1 text-sm">
+        <a href="../index.html" class="px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">Home</a>
+        <a href="index.html" class="px-3 py-1.5 rounded-win bg-black/5 dark:bg-white/10">Learning path</a>
+        <button onclick="CampTheme.toggle()" aria-label="Toggle theme"
+          class="ml-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">
+          <span class="dark:hidden">🌙</span><span class="hidden dark:inline">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-4 py-12" x-data="{
+      done: CampProgress.all(),
+      refresh() { this.done = CampProgress.all(); },
+      isDone(id) { return !!this.done[id]; }
+    }" x-init="document.addEventListener('camp:progress', () => refresh())">
+
+    <div class="flex flex-wrap items-end justify-between gap-4 mb-10">
+      <div>
+        <h1 class="text-3xl font-bold">The camp trail 🗺️</h1>
+        <p class="mt-2 text-neutral-600 dark:text-neutral-300 max-w-2xl">
+          Follow the trail from base camp to the summit. Each lesson assumes Windows knowledge and
+          translates it into Linux. Interactive terminal exercises are marked with <span class="font-mono text-term-green">&gt;_</span>.
+        </p>
+      </div>
+      <div class="text-sm bg-win-card dark:bg-win-darkCard border border-black/5 dark:border-white/10 rounded-win px-4 py-3 shadow-sm">
+        <div class="text-neutral-500 dark:text-neutral-400">Camp rank</div>
+        <div class="font-semibold" x-text="CampProgress.rank()"></div>
+        <div class="text-xs text-neutral-500 dark:text-neutral-400" x-text="`${Object.keys(done).length} lesson(s) completed`"></div>
+      </div>
+    </div>
+
+    <!-- Trail sections -->
+    <div class="space-y-8">
+
+      <!-- 0 -->
+      <section class="bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-6 shadow-sm">
+        <h2 class="text-xl font-semibold flex items-center gap-3"><span class="text-2xl">🥾</span> Base camp — try Linux safely</h2>
+        <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-300">No commitment. No broken Windows installs. No fear.</p>
+        <ul class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm">
+          <li class="lesson opacity-60">Live USB &amp; Ventoy <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">Virtual machines (VirtualBox, Hyper-V) <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">WSL as a stepping stone <span class="tag-soon">soon</span></li>
+        </ul>
+      </section>
+
+      <!-- 1–2 -->
+      <section class="bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-6 shadow-sm">
+        <h2 class="text-xl font-semibold flex items-center gap-3"><span class="text-2xl">🧭</span> 1–2. About Linux &amp; distributions</h2>
+        <ul class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm">
+          <li class="lesson opacity-60">1. What is Linux/GNU? <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">2.1 The distro family tree <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">2.2 Top 10 popular distros <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">2.3 Desktops: GNOME, KDE &amp; friends <span class="tag-soon">soon</span></li>
+        </ul>
+      </section>
+
+      <!-- 3–4 -->
+      <section class="bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-6 shadow-sm">
+        <h2 class="text-xl font-semibold flex items-center gap-3"><span class="text-2xl">💿</span> 3–4. Install &amp; initial setup</h2>
+        <ul class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm">
+          <li class="lesson opacity-60">3.1 Drivers (incl. the Nvidia talk) <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">3.2 Package managers, third party &amp; Flatpak <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">3.3 Installing codecs <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">4.1 Post-install checklist &amp; backups <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">4.2 The filesystem hierarchy (goodbye C:\) <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">4.3 Windows-equivalents cheat-sheet <span class="tag-soon">soon</span></li>
+        </ul>
+      </section>
+
+      <!-- 5 -->
+      <section class="bg-win-card dark:bg-win-darkCard rounded-win border-2 border-win-accent/40 p-6 shadow-sm">
+        <h2 class="text-xl font-semibold flex items-center gap-3"><span class="text-2xl">🖥️</span> 5. Learn the Linux terminal <span class="font-mono text-term-green text-base">&gt;_</span></h2>
+        <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-300">Twenty hands-on topics — each one starts with the cmd/PowerShell you already know.</p>
+        <ul class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm">
+          <li class="lesson opacity-60">5.0 Coming from cmd/PowerShell <span class="tag-soon">soon</span></li>
+          <li>
+            <a href="05-terminal/01-file-operations.html"
+               class="lesson-active group flex items-center gap-2 rounded-win border border-win-accent/30 bg-win-accent/5 px-3 py-2 hover:bg-win-accent/10 transition">
+              <span class="text-lg" x-text="isDone('5.1') ? '✅' : '▶️'"></span>
+              <span><span class="font-semibold text-win-accent">5.1 File operations</span><br>
+              <span class="text-xs text-neutral-500 dark:text-neutral-400">Interactive exercise included</span></span>
+            </a>
+          </li>
+          <li class="lesson opacity-60">5.2 Directory operations <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.3 File &amp; folder permissions <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.4 User management <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.5 Group management <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.6 Process management <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.7 Networking <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.8 Package management <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.9 Job scheduling <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.10 Disk &amp; filesystem commands <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.11 Hardware &amp; system info <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.12 Compression &amp; archiving <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.13 Text processing &amp; formatting <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.14 Kernel &amp; module management <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.15 System control <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.16 Logging &amp; monitoring <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.17 Checksums &amp; file integrity <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">5.18 Date &amp; time <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-50">5.19 Mail &amp; user communication <span class="tag-bonus">bonus</span></li>
+          <li class="lesson opacity-50">5.20 Printing <span class="tag-bonus">bonus</span></li>
+        </ul>
+      </section>
+
+      <!-- 6–7 -->
+      <section class="bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-6 shadow-sm">
+        <h2 class="text-xl font-semibold flex items-center gap-3"><span class="text-2xl">✍️</span> 6–7. Editors &amp; scripting</h2>
+        <ul class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm">
+          <li class="lesson opacity-60">6.1 vim <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">6.2 nano <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">6.3 Desktop alternatives <span class="tag-soon">soon</span></li>
+          <li class="lesson opacity-60">7. Bash scripting for PowerShell users <span class="tag-soon">soon</span></li>
+        </ul>
+      </section>
+
+      <!-- Future -->
+      <section class="rounded-win border border-dashed border-black/15 dark:border-white/20 p-6 opacity-70">
+        <h2 class="text-xl font-semibold flex items-center gap-3"><span class="text-2xl">🚀</span> Beyond the trail</h2>
+        <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-300">Future tracks: Git · programming languages · container technologies (Docker, Podman).</p>
+      </section>
+    </div>
+  </div>
+
+  <footer class="border-t border-black/5 dark:border-white/10 mt-12">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-neutral-500 dark:text-neutral-400 flex flex-wrap gap-4 justify-between">
+      <span>🏕️ The Linux Learning Camp for Windows Refugees</span>
+      <span>Built with Tailwind CSS · htmx · Alpine.js</span>
+    </div>
+  </footer>
+
+  <style>
+    .lesson { padding: 0.5rem 0.75rem; border-radius: 8px; background: rgb(0 0 0 / 0.03); }
+    .dark .lesson { background: rgb(255 255 255 / 0.05); }
+    .tag-soon, .tag-bonus { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.1rem 0.4rem; border-radius: 9999px; margin-left: 0.25rem; }
+    .tag-soon { background: rgb(0 103 192 / 0.12); color: #0067c0; }
+    .dark .tag-soon { color: #4cc2ff; }
+    .tag-bonus { background: rgb(22 198 12 / 0.12); color: #16a34a; }
+  </style>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.1 File operations — Linux Learning Camp</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            win: { accent: '#0067c0', accentHover: '#1975c5', bg: '#f3f3f3', darkBg: '#202020', card: '#fbfbfb', darkCard: '#2b2b2b' },
+            term: { green: '#16c60c', blue: '#3b78ff', cyan: '#4cc2ff' },
+          },
+          borderRadius: { win: '8px' },
+          fontFamily: {
+            sans: ['"Segoe UI Variable Text"', '"Segoe UI"', 'system-ui', 'sans-serif'],
+            mono: ['"Cascadia Code"', '"Cascadia Mono"', 'Consolas', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="../../assets/css/app.css">
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script src="../../assets/js/terminal.js"></script>
+</head>
+<body class="bg-win-bg dark:bg-win-darkBg text-neutral-900 dark:text-neutral-100 font-sans antialiased" hx-boost="true">
+
+  <header class="acrylic sticky top-0 z-40 border-b border-black/5 dark:border-white/10">
+    <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-semibold">
+        <span class="text-xl">🏕️</span><span>Linux Learning Camp</span>
+      </a>
+      <nav class="flex items-center gap-1 text-sm">
+        <a href="../../index.html" class="px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">Home</a>
+        <a href="../index.html" class="px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">Learning path</a>
+        <button onclick="CampTheme.toggle()" aria-label="Toggle theme"
+          class="ml-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">
+          <span class="dark:hidden">🌙</span><span class="hidden dark:inline">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-4 py-10 grid lg:grid-cols-[16rem_1fr] gap-8">
+
+    <!-- Lesson sidebar -->
+    <aside class="hidden lg:block">
+      <nav class="sticky top-20 space-y-1 text-sm">
+        <div class="text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400 px-3 mb-2">5. Terminal</div>
+        <a href="#" class="block px-3 py-2 rounded-win bg-win-accent/10 text-win-accent font-semibold border-l-4 border-win-accent">5.1 File operations</a>
+        <span class="block px-3 py-2 rounded-win text-neutral-400" title="Coming soon">5.2 Directory operations</span>
+        <span class="block px-3 py-2 rounded-win text-neutral-400" title="Coming soon">5.3 Permissions</span>
+        <span class="block px-3 py-2 rounded-win text-neutral-400" title="Coming soon">5.4 User management</span>
+        <a href="../index.html" class="block px-3 py-2 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition text-neutral-600 dark:text-neutral-300">← All topics</a>
+      </nav>
+    </aside>
+
+    <!-- Lesson content -->
+    <article class="prose-lesson max-w-3xl">
+      <div class="flex flex-wrap items-center gap-2 text-sm">
+        <a href="../index.html" class="text-win-accent hover:underline">Learning path</a>
+        <span class="text-neutral-400">/</span>
+        <span class="text-neutral-500 dark:text-neutral-400">5. Learn the Linux Terminal</span>
+      </div>
+
+      <h1 class="mt-2 text-3xl font-bold">5.1 File operations <span class="font-mono text-term-green text-2xl align-middle">&gt;_</span></h1>
+      <p class="mt-2 text-neutral-600 dark:text-neutral-300">
+        In Windows Explorer you right-click. In <code>cmd</code> you <code>copy</code> and <code>del</code>.
+        In bash you <code>cp</code> and <code>rm</code>. Same ideas, shorter words — and everything is
+        <strong>case-sensitive</strong> now: <code>Notes.txt</code> and <code>notes.txt</code> are two different files.
+      </p>
+
+      <!-- Windows ↔ Linux table -->
+      <div class="mt-6 overflow-x-auto rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard shadow-sm">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left border-b border-black/5 dark:border-white/10">
+              <th class="px-4 py-2.5 font-semibold">Task</th>
+              <th class="px-4 py-2.5 font-semibold">cmd / PowerShell</th>
+              <th class="px-4 py-2.5 font-semibold text-term-green">Linux (bash)</th>
+            </tr>
+          </thead>
+          <tbody class="font-mono text-[0.8rem]">
+            <tr class="border-b border-black/5 dark:border-white/5"><td class="px-4 py-2 font-sans text-sm">List files</td><td class="px-4 py-2">dir · Get-ChildItem</td><td class="px-4 py-2 text-term-green">ls, ls -la</td></tr>
+            <tr class="border-b border-black/5 dark:border-white/5"><td class="px-4 py-2 font-sans text-sm">Show file content</td><td class="px-4 py-2">type · Get-Content</td><td class="px-4 py-2 text-term-green">cat</td></tr>
+            <tr class="border-b border-black/5 dark:border-white/5"><td class="px-4 py-2 font-sans text-sm">Create empty file</td><td class="px-4 py-2">New-Item x.txt</td><td class="px-4 py-2 text-term-green">touch x.txt</td></tr>
+            <tr class="border-b border-black/5 dark:border-white/5"><td class="px-4 py-2 font-sans text-sm">Create folder</td><td class="px-4 py-2">mkdir · New-Item -ItemType Directory</td><td class="px-4 py-2 text-term-green">mkdir</td></tr>
+            <tr class="border-b border-black/5 dark:border-white/5"><td class="px-4 py-2 font-sans text-sm">Delete file</td><td class="px-4 py-2">del · Remove-Item</td><td class="px-4 py-2 text-term-green">rm</td></tr>
+            <tr class="border-b border-black/5 dark:border-white/5"><td class="px-4 py-2 font-sans text-sm">Change directory</td><td class="px-4 py-2">cd · Set-Location</td><td class="px-4 py-2 text-term-green">cd</td></tr>
+            <tr><td class="px-4 py-2 font-sans text-sm">Print current directory</td><td class="px-4 py-2">cd (no args) · Get-Location</td><td class="px-4 py-2 text-term-green">pwd</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Interactive exercise -->
+      <h2 class="mt-10 text-2xl font-bold">🏕️ Field exercise: your first Linux filesystem</h2>
+      <p class="mt-2 text-neutral-600 dark:text-neutral-300">
+        Below is a safe, simulated Linux VM. Nothing here can hurt anything — experiment freely.
+        Complete the five tasks to finish the lesson. Type <code>help</code> if you get stuck.
+      </p>
+
+      <div class="term-window mt-4">
+        <div class="term-titlebar">
+          <span class="dot bg-[#ff5f57]"></span><span class="dot bg-[#febc2e]"></span><span class="dot bg-[#28c840]"></span>
+          <span class="ml-2">camper@camp-vm — simulated bash</span>
+        </div>
+        <div id="lesson-terminal"></div>
+      </div>
+
+      <div x-data="{ done: CampProgress.isDone('5.1') }" x-init="document.addEventListener('camp:lesson-complete', () => done = true)"
+           class="mt-4 rounded-win border p-4 text-sm flex items-center gap-3"
+           :class="done ? 'border-term-green/40 bg-term-green/5' : 'border-black/10 dark:border-white/10'">
+        <span class="text-2xl" x-text="done ? '🏅' : '🎯'"></span>
+        <span x-show="!done">Complete all five tasks above to earn this lesson's badge.</span>
+        <span x-show="done" class="font-semibold text-term-green">Lesson 5.1 complete — badge earned! Your camp rank was updated.</span>
+      </div>
+
+      <!-- Tips -->
+      <div class="mt-8 grid sm:grid-cols-2 gap-4 text-sm">
+        <div class="rounded-win bg-win-accent/5 border border-win-accent/20 p-4">
+          <div class="font-semibold text-win-accent">💡 Windows refugee tip</div>
+          <p class="mt-1 text-neutral-600 dark:text-neutral-300">There's no <code>C:\</code> drive. Disks and partitions are mounted into <em>one tree</em> starting at <code>/</code> ("root"). Your files live in <code>/home/&lt;you&gt;</code>, shown as <code>~</code>.</p>
+        </div>
+        <div class="rounded-win bg-amber-500/5 border border-amber-500/25 p-4">
+          <div class="font-semibold text-amber-600 dark:text-amber-400">⚠️ Watch out</div>
+          <p class="mt-1 text-neutral-600 dark:text-neutral-300"><code>rm</code> does not use a Recycle Bin. Deleting is permanent — Linux assumes you meant it. (In a real shell, <code>rm -i</code> asks first.)</p>
+        </div>
+      </div>
+
+      <!-- Pager -->
+      <div class="mt-10 flex justify-between text-sm">
+        <a href="../index.html" class="px-4 py-2 rounded-win border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/10 transition">← Learning path</a>
+        <span class="px-4 py-2 rounded-win bg-black/5 dark:bg-white/5 text-neutral-400 cursor-not-allowed" title="Coming soon">5.2 Directory operations →</span>
+      </div>
+    </article>
+  </div>
+
+  <footer class="border-t border-black/5 dark:border-white/10 mt-12">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-neutral-500 dark:text-neutral-400 flex flex-wrap gap-4 justify-between">
+      <span>🏕️ The Linux Learning Camp for Windows Refugees</span>
+      <span>Lesson 5.1 · File operations</span>
+    </div>
+  </footer>
+
+  <script>
+    new CampTerminal(document.getElementById('lesson-terminal'), {
+      fs: {
+        '/home/camper': { type: 'dir', children: {
+          'welcome.txt': { type: 'file', content: 'Welcome to the camp, fellow refugee!\nToday you learn file operations.\n' },
+          'notes.txt':   { type: 'file', content: 'Remember: everything is case-sensitive.\n' },
+        }},
+        '/home/camper/projects': { type: 'dir', children: {} },
+      },
+      steps: [
+        { hint: "List what's in your home directory (the Linux 'dir')",
+          check: (cmd) => /^ls\b/.test(cmd),
+          success: "`ls` — that's the Linux `dir`. Try `ls -la` for details, like PowerShell's Get-ChildItem." },
+        { hint: "Read the welcome message (the Linux 'type' command)",
+          check: (cmd) => /^cat\s+welcome\.txt$/.test(cmd),
+          success: "`cat` shows a file's content, like `type` in cmd." },
+        { hint: "Create a new empty file called diary.txt",
+          check: (cmd, t) => /^touch\s+diary\.txt$/.test(cmd),
+          success: "`touch` creates an empty file (or updates its timestamp). Verify with `ls` if you like." },
+        { hint: "Make a folder called camp  (yes, mkdir exists in cmd too!)",
+          check: (cmd) => /^mkdir\s+camp$/.test(cmd),
+          success: "Same command as cmd — one of the few coincidences." },
+        { hint: "Delete notes.txt — carefully, there's no Recycle Bin here",
+          check: (cmd) => /^rm\s+(-\S+\s+)?notes\.txt$/.test(cmd),
+          success: "Gone forever. That's `del` territory — Linux treats you as an adult." },
+      ],
+      onComplete: () => CampProgress.complete('5.1'),
+    });
+  </script>
+</body>
+</html>
