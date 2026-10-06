@@ -41,5 +41,16 @@ const CampProgress = {
   },
 };
 
+// Init registry: runs callbacks on first load AND after every htmx swap
+// (needed because htmx boosted navigation does not execute inline scripts).
+const CampInit = (() => {
+  const callbacks = [];
+  const run = () => callbacks.forEach((fn) => { try { fn(); } catch (e) { console.error('[camp-init]', e); } });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else queueMicrotask(run);
+  document.addEventListener('htmx:load', run);
+  return (fn) => callbacks.push(fn);
+})();
+
 // Apply theme immediately to avoid flash
 CampTheme.init();

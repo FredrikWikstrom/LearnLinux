@@ -149,7 +149,11 @@
   </footer>
 
   <script>
-    new CampTerminal(document.getElementById('lesson-terminal'), {
+    CampInit(() => {
+      const el = document.getElementById('lesson-terminal');
+      if (!el || el.dataset.initialized) return;
+      el.dataset.initialized = '1';
+      new CampTerminal(el, {
       fs: {
         '/home/camper': { type: 'dir', children: {
           'welcome.txt': { type: 'file', content: 'Welcome to the camp, fellow refugee!\nToday you learn file operations.\n' },
@@ -175,6 +179,7 @@
           success: "Gone forever. That's `del` territory — Linux treats you as an adult." },
       ],
       onComplete: () => CampProgress.complete('5.1'),
+      });
     });
   </script>
 </body>
