@@ -46,13 +46,24 @@ class CampTerminal {
       <div class="camp-term-output"></div>
       <form class="camp-term-inputrow">
         <span class="camp-term-prompt"></span>
+        <span class="camp-term-echo"><span class="camp-term-echo-text"></span><span class="camp-term-cursor"></span></span>
         <input class="camp-term-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input">
       </form>`;
     this.out = this.el.querySelector('.camp-term-output');
     this.input = this.el.querySelector('.camp-term-input');
+    this.echoText = this.el.querySelector('.camp-term-echo-text');
+    this.cursor = this.el.querySelector('.camp-term-cursor');
     this.promptEl = this.el.querySelector('.camp-term-prompt');
     this.updatePrompt();
     this.el.addEventListener('click', () => this.input.focus());
+  }
+
+  syncEcho() {
+    this.echoText.textContent = this.input.value;
+    // Briefly hold the cursor steady while typing, like xterm/Windows Terminal
+    this.cursor.classList.add('typing');
+    clearTimeout(this.cursorTimer);
+    this.cursorTimer = setTimeout(() => this.cursor.classList.remove('typing'), 500);
   }
 
   updatePrompt() {
