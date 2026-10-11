@@ -31,6 +31,10 @@ class CampTerminal {
     this.render();
     this.bind();
     this.boot();
+
+    // Focus terminal when entering the page
+    requestAnimationFrame(() => this.focus());
+    setTimeout(() => this.focus(), 80);
   }
 
   defaultFs() {
@@ -44,26 +48,64 @@ class CampTerminal {
     this.el.classList.add('camp-term');
     this.el.innerHTML = `
       <div class="camp-term-output"></div>
-      <form class="camp-term-inputrow">
+      <div class="camp-term-inputrow" hx-boost="false" hx-disable>
         <span class="camp-term-prompt"></span>
-        <span class="camp-term-echo"><span class="camp-term-echo-text"></span><span class="camp-term-cursor"></span></span>
-        <input class="camp-term-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input">
-      </form>`;
+        <div class="camp-term-inputwrap">
+          <span class="camp-term-echo" aria-hidden="true"><span class="camp-term-echo-before"></span><span class="camp-term-cursor"><span class="camp-term-cursor-char">&nbsp;</span></span><span class="camp-term-echo-after"></span></span>
+          <input class="camp-term-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" autofocus aria-label="Terminal input">
+        </div>
+      </div>`;
     this.out = this.el.querySelector('.camp-term-output');
     this.input = this.el.querySelector('.camp-term-input');
-    this.echoText = this.el.querySelector('.camp-term-echo-text');
+    this.echoBefore = this.el.querySelector('.camp-term-echo-before');
+    this.echoAfter = this.el.querySelector('.camp-term-echo-after');
     this.cursor = this.el.querySelector('.camp-term-cursor');
+    this.cursorChar = this.el.querySelector('.camp-term-cursor-char');
     this.promptEl = this.el.querySelector('.camp-term-prompt');
     this.updatePrompt();
-    this.el.addEventListener('click', () => this.input.focus());
+    this.syncEcho();
+  }
+
+  focus() {
+    if (!this.input) return;
+    try {
+      this.input.focus({ preventScroll: true });
+    } catch {
+      this.input.focus();
+    }
+    this.el.classList.add('is-focused');
   }
 
   syncEcho() {
-    this.echoText.textContent = this.input.value;
+    const val = this.input.value || '';
+    let start = this.input.selectionStart;
+    let end = this.input.selectionEnd;
+    if (start === null || typeof start === 'undefined') start = val.length;
+    if (end === null || typeof end === 'undefined') end = val.length;
+
+    if (start !== end) {
+      const sMin = Math.min(start, end);
+      const sMax = Math.max(start, end);
+      this.echoBefore.textContent = val.slice(0, sMin);
+      this.cursorChar.textContent = '\u00a0';
+      this.cursor.style.display = 'none';
+      this.echoAfter.innerHTML = `<span class="camp-term-selected">${this.escape(val.slice(sMin, sMax))}</span>${this.escape(val.slice(sMax))}`;
+    } else {
+      this.cursor.style.display = '';
+      const before = val.slice(0, start);
+      const charUnder = val.slice(start, start + 1);
+      const after = val.slice(start + (charUnder ? 1 : 0));
+
+      this.echoBefore.textContent = before;
+      // Use non-breaking space for empty or regular space to maintain monospace cursor width
+      this.cursorChar.textContent = (!charUnder || charUnder === ' ') ? '\u00a0' : charUnder;
+      this.echoAfter.textContent = after;
+    }
+
     // Briefly hold the cursor steady while typing, like xterm/Windows Terminal
     this.cursor.classList.add('typing');
     clearTimeout(this.cursorTimer);
-    this.cursorTimer = setTimeout(() => this.cursor.classList.remove('typing'), 500);
+    this.cursorTimer = setTimeout(() => this.cursor.classList.remove('typing'), 450);
   }
 
   updatePrompt() {
@@ -74,17 +116,100 @@ class CampTerminal {
   }
 
   bind() {
-    this.el.querySelector('form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const cmd = this.input.value.trim();
-      this.input.value = '';
-      if (cmd) { this.history.push(cmd); this.hIdx = this.history.length; }
-      this.exec(cmd);
+    // Focus listeners
+    this.input.addEventListener('focus', () => {
+      this.el.classList.add('is-focused');
+      this.syncEcho();
     });
+    this.input.addEventListener('blur', () => {
+      this.el.classList.remove('is-focused');
+      this.syncEcho();
+    });
+
+    // Keystroke and sync listeners
+    this.input.addEventListener('input', () => this.syncEcho());
+    this.input.addEventListener('keyup', () => this.syncEcho());
+    this.input.addEventListener('click', () => this.syncEcho());
+    this.input.addEventListener('select', () => this.syncEcho());
+
+    // Sync when selection/caret position changes in document
+    document.addEventListener('selectionchange', () => {
+      if (document.activeElement === this.input) {
+        this.syncEcho();
+      }
+    });
+
+    // Keyboard navigation, command execution & history
     this.input.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowUp') { e.preventDefault(); if (this.hIdx > 0) { this.hIdx--; this.input.value = this.history[this.hIdx] || ''; } }
-      if (e.key === 'ArrowDown') { e.preventDefault(); if (this.hIdx < this.history.length) { this.hIdx++; this.input.value = this.history[this.hIdx] || ''; } }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        const cmd = this.input.value.trim();
+        this.input.value = '';
+        this.syncEcho();
+        if (cmd) { this.history.push(cmd); this.hIdx = this.history.length; }
+        this.exec(cmd);
+        return;
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (this.hIdx > 0) {
+          this.hIdx--;
+          this.input.value = this.history[this.hIdx] || '';
+          this.syncEcho();
+        }
+        return;
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (this.hIdx < this.history.length) {
+          this.hIdx++;
+          this.input.value = this.history[this.hIdx] || '';
+          this.syncEcho();
+        }
+        return;
+      }
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
+        const sel = window.getSelection();
+        if (!sel || !sel.toString().length) {
+          if (this.input.value) {
+            e.preventDefault();
+            this.print(`${this.promptEl.innerHTML} <span class="camp-term-cmd">${this.escape(this.input.value)}^C</span>`);
+            this.input.value = '';
+            this.syncEcho();
+          }
+        }
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'l') {
+        e.preventDefault();
+        this.exec('clear');
+        return;
+      }
+      queueMicrotask(() => this.syncEcho());
     });
+
+    // Re-focus on terminal clicks unless selecting text
+    this.el.addEventListener('click', (e) => {
+      if (e.target.closest('a, button')) return;
+      const sel = window.getSelection();
+      if (sel && sel.toString().length > 0) return;
+      this.focus();
+    });
+
+    const win = this.el.closest('.term-window');
+    if (win) {
+      win.addEventListener('click', (e) => {
+        if (e.target.closest('a, button')) return;
+        const sel = window.getSelection();
+        if (sel && sel.toString().length > 0) return;
+        this.focus();
+      });
+    }
   }
 
   boot() {

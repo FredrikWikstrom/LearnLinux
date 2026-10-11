@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>0.1 Live USB & Ventoy — Linux Learning Camp</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            win: { accent: '#0067c0', accentHover: '#1975c5', bg: '#f3f3f3', darkBg: '#202020', card: '#fbfbfb', darkCard: '#2b2b2b' },
+            term: { green: '#16c60c', blue: '#3b78ff', cyan: '#4cc2ff' },
+          },
+          borderRadius: { win: '8px' },
+          fontFamily: {
+            sans: ['"Segoe UI Variable Text"', '"Segoe UI"', 'system-ui', 'sans-serif'],
+            mono: ['"Cascadia Code"', '"Cascadia Mono"', 'Consolas', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="../../assets/css/app.css">
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script src="../../assets/js/terminal.js"></script>
+</head>
+<body class="bg-win-bg dark:bg-win-darkBg text-neutral-900 dark:text-neutral-100 font-sans antialiased" hx-boost="true">
+
+  <!-- Header -->
+  <header class="acrylic sticky top-0 z-40 border-b border-black/5 dark:border-white/10">
+    <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-semibold">
+        <span class="text-xl">🏕️</span><span>Linux Learning Camp</span>
+      </a>
+      <nav class="flex items-center gap-1 text-sm">
+        <a href="../../index.html" class="px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">Home</a>
+        <a href="../index.html" class="px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">Learning path</a>
+        <button onclick="CampTheme.toggle()" aria-label="Toggle theme"
+          class="ml-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">
+          <span class="dark:hidden">🌙</span><span class="hidden dark:inline">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-4 py-10 grid lg:grid-cols-[16rem_1fr] gap-8">
+
+    <!-- Sidebar -->
+    <aside class="hidden lg:block">
+      <nav class="sticky top-20 space-y-1 text-sm">
+        <div class="text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400 px-3 mb-2">0. Try Linux safely</div>
+        <a href="#" class="block px-3 py-2 rounded-win bg-win-accent/10 text-win-accent font-semibold border-l-4 border-win-accent">0.1 Live USB &amp; Ventoy</a>
+        <span class="block px-3 py-2 rounded-win text-neutral-400" title="Coming soon">0.2 Virtual machines</span>
+        <span class="block px-3 py-2 rounded-win text-neutral-400" title="Coming soon">0.3 WSL as a stepping stone</span>
+        <div class="pt-4 border-t border-black/5 dark:border-white/10 mt-4">
+          <a href="../index.html" class="block px-3 py-2 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition text-neutral-600 dark:text-neutral-300">← All camp topics</a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <article class="prose-lesson max-w-3xl space-y-8">
+
+      <!-- Breadcrumbs -->
+      <div class="flex flex-wrap items-center gap-2 text-sm">
+        <a href="../index.html" class="text-win-accent hover:underline">Learning path</a>
+        <span class="text-neutral-400">/</span>
+        <span class="text-neutral-500 dark:text-neutral-400">0. Try Linux safely</span>
+      </div>
+
+      <!-- Title & Hook -->
+      <div>
+        <span class="inline-block text-xs font-semibold uppercase tracking-wide text-win-accent bg-win-accent/10 px-2.5 py-1 rounded-full mb-3">Base Camp · Lesson 0.1</span>
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">0.1 Live USB &amp; Ventoy: Test-Drive Linux with Zero Risk 🔌</h1>
+        <p class="mt-3 text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
+          The biggest fear for Windows refugees is: <em>"Will I accidentally wipe my hard drive, lose my family photos, or break my laptop?"</em>
+          The answer with a Live USB is a categorical <strong>no</strong>. You can test real Linux on your real PC without touching a single file on your Windows drive.
+        </p>
+      </div>
+
+      <!-- Fear vs Reality Banner -->
+      <div class="rounded-win border border-term-green/30 bg-term-green/5 p-5">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl mt-0.5">🛡️</span>
+          <div>
+            <h2 class="font-bold text-neutral-900 dark:text-neutral-100">The Windows Refugee Promise</h2>
+            <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              A <strong>Live USB</strong> loads Linux entirely into your computer's <strong>RAM (temporary memory)</strong>.
+              Your internal Windows SSD (`C:\`) is left completely alone in read-only mode unless you intentionally tell it otherwise.
+              Whenever you're done, just unplug the USB, restart your computer, and you're back in Windows 11/10 exactly as you left it.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Why Live USB is so good -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold">Why a Live USB is the ultimate "Try Before You Buy"</h2>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div class="bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-4 shadow-sm">
+            <div class="text-2xl mb-2">⚡</div>
+            <h3 class="font-semibold text-sm">Tests Your Real Hardware</h3>
+            <p class="mt-1 text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Check if your Wi-Fi, Bluetooth, sound card, touchpad gestures, and multiple monitors work out of the box before committing.
+            </p>
+          </div>
+          <div class="bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-4 shadow-sm">
+            <div class="text-2xl mb-2">🛟</div>
+            <h3 class="font-semibold text-sm">Emergency Rescue Disk</h3>
+            <p class="mt-1 text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              If Windows ever gets a Blue Screen of Death and won't boot, your Linux USB can copy your files off your hard drive to safety!
+            </p>
+          </div>
+          <div class="bg-win-card dark:bg-win-darkCard rounded-win border border-black/5 dark:border-white/10 p-4 shadow-sm">
+            <div class="text-2xl mb-2">🎮</div>
+            <h3 class="font-semibold text-sm">Safe Sandbox</h3>
+            <p class="mt-1 text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Try clicking weird settings, change desktop themes, or test commands. If you mess up, reboot and it wipes clean to brand new.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Old Way vs Ventoy -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold">The Game Changer: Ventoy 🚀</h2>
+        <p class="text-neutral-600 dark:text-neutral-300">
+          In the past, testing different Linux distributions was painful for Windows users. Today, <strong>Ventoy</strong> has completely solved this.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+          <!-- The Old Way -->
+          <div class="rounded-win border border-neutral-300 dark:border-neutral-700 bg-black/5 dark:bg-white/5 p-5">
+            <div class="flex items-center gap-2 font-semibold text-neutral-500 dark:text-neutral-400">
+              <span>⏳</span><span>The Old Way (Rufus / BalenaEtcher)</span>
+            </div>
+            <ul class="mt-3 space-y-2 text-xs text-neutral-600 dark:text-neutral-300">
+              <li class="flex items-start gap-2">
+                <span class="text-red-500 font-bold">✗</span>
+                <span>Wipes the entire USB stick every time you burn an ISO.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-red-500 font-bold">✗</span>
+                <span>Only holds <strong>one</strong> operating system per USB stick.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-red-500 font-bold">✗</span>
+                <span>Wastes a 64 GB flash drive on a 3 GB installer.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-red-500 font-bold">✗</span>
+                <span>The USB drive is locked and can't be used for normal files.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- The Ventoy Way -->
+          <div class="rounded-win border-2 border-win-accent bg-win-accent/5 p-5">
+            <div class="flex items-center gap-2 font-semibold text-win-accent">
+              <span>✨</span><span>The Ventoy Way (Recommended!)</span>
+            </div>
+            <ul class="mt-3 space-y-2 text-xs text-neutral-600 dark:text-neutral-300">
+              <li class="flex items-start gap-2">
+                <span class="text-term-green font-bold">✓</span>
+                <span>Install Ventoy to the USB <strong>once</strong> (takes 5 seconds).</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-term-green font-bold">✓</span>
+                <span>To add Linux distros: <strong>just drag and drop ISO files in File Explorer</strong>!</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-term-green font-bold">✓</span>
+                <span>Hold 5 different Linux distros (Mint, Ubuntu, Fedora) + Windows 11 on the same stick.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-term-green font-bold">✓</span>
+                <span>The remaining drive space still acts like a normal USB stick for your files!</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step by Step Guide -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold">How to Create Your Ventoy Drive in 4 Simple Steps</h2>
+
+        <div class="space-y-3">
+          <!-- Step 1 -->
+          <div class="flex gap-4 p-4 rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard">
+            <span class="flex-shrink-0 w-8 h-8 rounded-full bg-win-accent text-white flex items-center justify-center font-bold text-sm">1</span>
+            <div>
+              <h3 class="font-semibold text-base">Plug in a USB Flash Drive</h3>
+              <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-300">
+                Any flash drive with at least 8 GB (16 GB or 32 GB is ideal).<br>
+                <span class="text-amber-600 dark:text-amber-400 font-semibold text-xs">⚠️ Important:</span> Ventoy formats the drive during the initial 1-time setup, so copy any personal documents off it first.
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex gap-4 p-4 rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard">
+            <span class="flex-shrink-0 w-8 h-8 rounded-full bg-win-accent text-white flex items-center justify-center font-bold text-sm">2</span>
+            <div>
+              <h3 class="font-semibold text-base">Download &amp; Run Ventoy</h3>
+              <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-300">
+                Go to the official site <a href="https://www.ventoy.net" target="_blank" rel="noopener" class="text-win-accent underline font-semibold">ventoy.net</a> and download the Windows release (<code>ventoy-x.x.xx-windows.zip</code>). Extract the folder and double-click <code>Ventoy2Disk.exe</code>.
+              </p>
+              <div class="mt-2 text-xs bg-black/5 dark:bg-white/5 p-3 rounded-win space-y-1">
+                <div>• Select your USB drive in the device dropdown list.</div>
+                <div>• In top menu <em>Option</em> → verify <em>Secure Boot Support</em> is checked.</div>
+                <div>• Click <strong class="text-win-accent">Install</strong>. In 5 seconds, your drive is ready!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex gap-4 p-4 rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard">
+            <span class="flex-shrink-0 w-8 h-8 rounded-full bg-win-accent text-white flex items-center justify-center font-bold text-sm">3</span>
+            <div>
+              <h3 class="font-semibold text-base">Download a Linux ISO Image</h3>
+              <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-300">
+                An ISO is a single downloadable package of the whole operating system. Great beginner distros to download:
+              </p>
+              <ul class="mt-2 list-disc list-inside text-xs text-neutral-600 dark:text-neutral-300 space-y-1">
+                <li><strong class="text-neutral-800 dark:text-neutral-200"><a href="https://linuxmint.com/" target="_blank" rel="noopener" class="text-win-accent underline">Linux Mint</a></strong> — The #1 most familiar desktop layout for Windows refugees (Start Menu, taskbar, system tray).</li>
+                <li><strong class="text-neutral-800 dark:text-neutral-200"><a href="https://ubuntu.com/download/desktop" target="_blank" rel="noopener" class="text-win-accent underline">Ubuntu Desktop</a></strong> — The most popular and well-documented Linux distro worldwide.</li>
+                <li><strong class="text-neutral-800 dark:text-neutral-200"><a href="https://fedoraproject.org/workstation/" target="_blank" rel="noopener" class="text-win-accent underline">Fedora Workstation</a></strong> — Modern, polished, and very close to pure upstream Linux.</li>
+                <li><strong class="text-neutral-800 dark:text-neutral-200"><a href="https://cachyos.org/" target="_blank" rel="noopener" class="text-win-accent underline">CachyOS</a></strong> — A secure OS focused on cutting edge performance.</li>
+                <li><strong class="text-neutral-800 dark:text-neutral-200"><a href="https://distrowatch.com/dwres.php?resource=popularity" target="_blank" rel="noopener" class="text-win-accent underline">More alternatives</a></strong> — Find all the popular Linux distributions under <a href="https://distrowatch.com/" target="_blank" rel="noopener" class="text-win-accent underline">Distrowatch.com</a>.</li>
+              </ul>
+
+              <!-- Desktop environments (GNOME vs KDE) -->
+              <div class="mt-4 p-3.5 rounded-win bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-xs">
+                <div class="font-semibold text-neutral-800 dark:text-neutral-200 flex items-center gap-1.5 mb-1.5">
+                  <span>💡</span><span>Windows Refugee Tip: What is a "Desktop Environment" (GNOME vs. KDE)?</span>
+                </div>
+                <p class="text-neutral-600 dark:text-neutral-300 leading-relaxed">
+                  In Windows, you are locked into Microsoft's fixed desktop shell. In Linux, the visual interface (the <strong>Desktop Environment</strong>) is swappable! Many major distributions come in different "flavors" or "spins":
+                </p>
+                <div class="mt-2.5 grid sm:grid-cols-2 gap-2 text-xs">
+                  <div class="p-2.5 rounded bg-win-card dark:bg-win-darkCard border border-black/5 dark:border-white/5">
+                    <strong class="text-neutral-800 dark:text-neutral-200">GNOME (Modern &amp; Sleek)</strong>
+                    <p class="mt-1 text-neutral-500 dark:text-neutral-400">Clean top bar, dock, and gestures (similar to macOS/tablets). Default on <a href="https://ubuntu.com/download/desktop" target="_blank" rel="noopener" class="text-win-accent underline">Ubuntu</a> and <a href="https://fedoraproject.org/workstation/" target="_blank" rel="noopener" class="text-win-accent underline">Fedora Workstation</a>.</p>
+                  </div>
+                  <div class="p-2.5 rounded bg-win-card dark:bg-win-darkCard border border-black/5 dark:border-white/5">
+                    <strong class="text-neutral-800 dark:text-neutral-200">KDE Plasma (Familiar to Windows Users)</strong>
+                    <p class="mt-1 text-neutral-500 dark:text-neutral-400">Traditional bottom taskbar, Start Menu, system tray, and deep customization. Check out <a href="https://kubuntu.org/getkubuntu/" target="_blank" rel="noopener" class="text-win-accent underline font-semibold">Kubuntu</a> (Ubuntu with KDE) or <a href="https://fedoraproject.org/spins/kde/" target="_blank" rel="noopener" class="text-win-accent underline font-semibold">Fedora KDE Spin</a>.</p>
+                  </div>
+                </div>
+                <p class="mt-2 text-neutral-500 dark:text-neutral-400 italic">
+                  Because Ventoy supports multiple ISOs, you can download both GNOME and KDE versions and test them side-by-side on the same USB drive to see which you prefer!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="flex gap-4 p-4 rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard">
+            <span class="flex-shrink-0 w-8 h-8 rounded-full bg-win-accent text-white flex items-center justify-center font-bold text-sm">4</span>
+            <div>
+              <h3 class="font-semibold text-base">Copy the ISO into the USB Drive</h3>
+              <p class="mt-1 text-sm text-neutral-600 dark:text-neutral-300">
+                Open <strong>File Explorer</strong> in Windows, open your USB drive (named <code>Ventoy</code>), and simply paste or drag-and-drop the <code>.iso</code> file onto it!
+                You can copy multiple ISO files if your USB has space.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How to Boot from Windows -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold">The Windows Trick: Booting USB without BIOS gymnastics 🪄</h2>
+        <p class="text-neutral-600 dark:text-neutral-300">
+          Windows 10 and 11 use a feature called <em>Fast Startup</em>, which puts your hardware in hibernation and often skips the boot screen.
+          Instead of mashing random function keys, here is the official, foolproof Windows trick:
+        </p>
+
+        <div class="rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard p-5 space-y-3">
+          <div class="font-semibold text-win-accent flex items-center gap-2">
+            <span>🖱️</span><span>The "Shift + Restart" Trick</span>
+          </div>
+          <ol class="list-decimal list-inside text-sm text-neutral-600 dark:text-neutral-300 space-y-2">
+            <li>Keep your Ventoy USB plugged into your PC.</li>
+            <li>Click the Windows <strong>Start Menu</strong> → click the <strong>Power</strong> icon.</li>
+            <li><strong>Hold down the <kbd class="px-2 py-0.5 rounded bg-black/10 dark:bg-white/15 font-mono text-xs font-semibold">Shift</kbd> key</strong> on your keyboard and click <strong>Restart</strong>.</li>
+            <li>Windows will show a blue screen labeled <em>"Choose an option"</em>.</li>
+            <li>Click <strong>Use a device</strong> → choose <strong>EFI USB Device</strong> (or your flash drive's name).</li>
+          </ol>
+          <div class="text-xs text-neutral-500 dark:text-neutral-400 pt-2 border-t border-black/5 dark:border-white/10">
+            <strong>Traditional shortcut:</strong> Alternatively, turn on your PC and immediately press your boot key: <code>F12</code> (Dell, Lenovo), <code>F11</code> (MSI), <code>F8</code> (Asus), or <code>Esc / F9</code> (HP).
+          </div>
+        </div>
+      </section>
+
+      <!-- Other tools mention -->
+      <section class="space-y-3">
+        <h2 class="text-xl font-bold">Other tools you might hear about</h2>
+        <p class="text-sm text-neutral-600 dark:text-neutral-300">
+          While Ventoy is our top recommendation, you'll see these two names frequently mentioned in Linux forums:
+        </p>
+        <div class="grid sm:grid-cols-2 gap-3 text-sm">
+          <div class="p-3.5 rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard">
+            <div class="font-semibold">Rufus (Windows-only)</div>
+            <p class="text-xs text-neutral-600 dark:text-neutral-300 mt-1">
+              A classic single-ISO burning tool. Very fast and dependable, but it overwrites the drive and only holds one image at a time.
+            </p>
+          </div>
+          <div class="p-3.5 rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard">
+            <div class="font-semibold">BalenaEtcher (Cross-platform)</div>
+            <p class="text-xs text-neutral-600 dark:text-neutral-300 mt-1">
+              A minimalist, 3-click flashing tool. Simple to use, but burns one ISO per drive and makes the USB unreadable by Windows until reformatted.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Knowledge Check / Badge -->
+      <section class="pt-4" x-data="{
+          q1: null,
+          q2: null,
+          q3: null,
+          submitted: false,
+          get score() {
+            let s = 0;
+            if (this.q1 === 'ram') s++;
+            if (this.q2 === 'copy') s++;
+            if (this.q3 === 'shift') s++;
+            return s;
+          },
+          get allCorrect() { return this.score === 3; },
+          completeLesson() {
+            CampProgress.complete('0.1');
+          }
+        }">
+        <div class="rounded-win border border-win-accent/30 bg-win-card dark:bg-win-darkCard p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl">🎓</span>
+            <div>
+              <h2 class="text-lg font-bold">Windows Refugee Checkpoint</h2>
+              <p class="text-xs text-neutral-500 dark:text-neutral-400">Answer 3 quick sanity checks to earn your Base Camp badge.</p>
+            </div>
+          </div>
+
+          <div class="space-y-5 text-sm">
+            <!-- Q1 -->
+            <div>
+              <p class="font-semibold">1. When you boot Linux from a Live USB, where does it run?</p>
+              <div class="mt-2 space-y-1.5 text-xs">
+                <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                  <input type="radio" name="q1" value="hdd" x-model="q1" class="text-win-accent">
+                  <span>It installs silently on my C:\ drive and replaces Windows.</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                  <input type="radio" name="q1" value="ram" x-model="q1" class="text-win-accent">
+                  <span>In my PC's RAM (temporary memory). My Windows drive is left untouched!</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Q2 -->
+            <div>
+              <p class="font-semibold">2. With Ventoy installed, how do you add a second Linux distro to test?</p>
+              <div class="mt-2 space-y-1.5 text-xs">
+                <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                  <input type="radio" name="q2" value="format" x-model="q2" class="text-win-accent">
+                  <span>I have to wipe the whole USB stick and reinstall Ventoy.</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                  <input type="radio" name="q2" value="copy" x-model="q2" class="text-win-accent">
+                  <span>Just drag and drop the new .iso file onto the USB drive in File Explorer!</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Q3 -->
+            <div>
+              <p class="font-semibold">3. What is the easiest trick in Windows to boot to a USB drive?</p>
+              <div class="mt-2 space-y-1.5 text-xs">
+                <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                  <input type="radio" name="q3" value="shift" x-model="q3" class="text-win-accent">
+                  <span>Hold down the Shift key while clicking "Restart" in the Start Menu.</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                  <input type="radio" name="q3" value="cord" x-model="q3" class="text-win-accent">
+                  <span>Pull the power plug out while Windows is loading.</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="pt-4 border-t border-black/5 dark:border-white/10 flex flex-wrap items-center justify-between gap-3">
+              <button @click="submitted = true; if (allCorrect) completeLesson();"
+                class="bg-win-accent hover:bg-win-accentHover text-white font-semibold text-xs px-4 py-2 rounded-win transition shadow-sm">
+                Check my answers
+              </button>
+
+              <div x-show="submitted" class="text-xs">
+                <template x-if="allCorrect">
+                  <span class="text-term-green font-semibold">🎉 All 3 correct! You're ready to test-drive Linux. Badge earned!</span>
+                </template>
+                <template x-if="!allCorrect">
+                  <span class="text-red-500 font-semibold" x-text="`Score: ${score}/3. Review the answers and try again!`"></span>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completion status badge -->
+        <div x-data="{ done: CampProgress.isDone('0.1') }"
+             x-init="document.addEventListener('camp:progress', () => done = CampProgress.isDone('0.1'))"
+             class="mt-4 rounded-win border p-4 text-sm flex items-center justify-between gap-3"
+             :class="done ? 'border-term-green/40 bg-term-green/5' : 'border-black/10 dark:border-white/10'">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl" x-text="done ? '🏅' : '🎯'"></span>
+            <div>
+              <span x-show="!done" class="font-medium">Complete the checkpoint above to earn the Base Camp badge.</span>
+              <span x-show="done" class="font-semibold text-term-green">Lesson 0.1 complete — Base Camp badge earned!</span>
+            </div>
+          </div>
+          <button x-show="!done" @click="CampProgress.complete('0.1')"
+            class="text-xs text-neutral-500 hover:text-win-accent underline">
+            Mark as complete
+          </button>
+        </div>
+      </section>
+
+      <!-- Refugee tips box -->
+      <div class="grid sm:grid-cols-2 gap-4 text-sm pt-4">
+        <div class="rounded-win bg-win-accent/5 border border-win-accent/20 p-4">
+          <div class="font-semibold text-win-accent">💡 Windows refugee tip</div>
+          <p class="mt-1 text-xs text-neutral-600 dark:text-neutral-300">
+            A Live USB is <strong>non-persistent</strong> by default — meaning any files you download or browser bookmarks you make disappear when you shut down. That's a feature, not a bug! It means you can never break it.
+          </p>
+        </div>
+        <div class="rounded-win bg-amber-500/5 border border-amber-500/25 p-4">
+          <div class="font-semibold text-amber-600 dark:text-amber-400">⚠️ BitLocker Note</div>
+          <p class="mt-1 text-xs text-neutral-600 dark:text-neutral-300">
+            If your Windows PC has BitLocker enabled (common on modern laptops), Linux won't be able to view your Windows files without your 48-digit recovery key. That's good — your data is encrypted and safe!
+          </p>
+        </div>
+      </div>
+
+      <!-- Pager -->
+      <div class="pt-6 flex justify-between text-sm">
+        <a href="../index.html" class="px-4 py-2 rounded-win border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/10 transition font-medium">
+          ← All topics
+        </a>
+        <span class="px-4 py-2 rounded-win bg-black/5 dark:bg-white/5 text-neutral-400 cursor-not-allowed font-medium" title="Coming soon">
+          0.2 Virtual machines →
+        </span>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-black/5 dark:border-white/10 mt-12">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-neutral-500 dark:text-neutral-400 flex flex-wrap gap-4 justify-between">
+      <span>🏕️ The Linux Learning Camp for Windows Refugees</span>
+      <span>Lesson 0.1 · Live USB &amp; Ventoy</span>
+    </div>
+  </footer>
+
+</body>
+</html>
+
