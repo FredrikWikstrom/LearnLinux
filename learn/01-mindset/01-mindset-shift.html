@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.1 The Mindset Shift — Linux Learning Camp</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            win: { accent: '#0067c0', accentHover: '#1975c5', bg: '#f3f3f3', darkBg: '#202020', card: '#fbfbfb', darkCard: '#2b2b2b' },
+            term: { green: '#16c60c', blue: '#3b78ff', cyan: '#4cc2ff' },
+          },
+          borderRadius: { win: '8px' },
+          fontFamily: {
+            sans: ['"Segoe UI Variable Text"', '"Segoe UI"', 'system-ui', 'sans-serif'],
+            mono: ['"Cascadia Code"', '"Cascadia Mono"', 'Consolas', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="../../assets/css/app.css">
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script src="../../assets/js/terminal.js"></script>
+</head>
+<body class="bg-win-bg dark:bg-win-darkBg text-neutral-900 dark:text-neutral-100 font-sans antialiased" hx-boost="true">
+
+  <!-- Header -->
+  <header class="acrylic sticky top-0 z-40 border-b border-black/5 dark:border-white/10">
+    <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-semibold">
+        <span class="text-xl">🏕️</span><span>Linux Learning Camp</span>
+      </a>
+      <nav class="flex items-center gap-1 text-sm">
+        <a href="../../index.html" class="px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">Home</a>
+        <a href="../index.html" class="px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">Learning path</a>
+        <button onclick="CampTheme.toggle()" aria-label="Toggle theme"
+          class="ml-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">
+          <span class="dark:hidden">🌙</span><span class="hidden dark:inline">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-4 py-10 grid lg:grid-cols-[16rem_1fr] gap-8">
+
+    <!-- Sidebar -->
+    <aside class="hidden lg:block">
+      <nav class="sticky top-20 space-y-1 text-sm">
+        <div class="text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400 px-3 mb-2">1. The Mindset Shift</div>
+        <a href="#" class="block px-3 py-2 rounded-win bg-win-accent/10 text-win-accent font-semibold border-l-4 border-win-accent">1.1 How Linux Differs</a>
+        <div class="pt-4 border-t border-black/5 dark:border-white/10 mt-4 space-y-1">
+          <div class="text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400 px-3 mb-2">Previous &amp; Next</div>
+          <a href="../00-try-safely/01-live-usb-ventoy.html" class="block px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition text-neutral-600 dark:text-neutral-300">← 0.1 Live USB &amp; Ventoy</a>
+          <a href="../index.html" class="block px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition text-neutral-600 dark:text-neutral-300">All camp topics</a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <article class="prose-lesson max-w-3xl space-y-8">
+
+      <!-- Breadcrumbs -->
+      <div class="flex flex-wrap items-center gap-2 text-sm">
+        <a href="../index.html" class="text-win-accent hover:underline">Learning path</a>
+        <span class="text-neutral-400">/</span>
+        <span class="text-neutral-500 dark:text-neutral-400">1. The Mindset Shift</span>
+      </div>
+
+      <!-- Title & Hook -->
+      <div>
+        <span class="inline-block text-xs font-semibold uppercase tracking-wide text-win-accent bg-win-accent/10 px-2.5 py-1 rounded-full mb-3">Lesson 1.1</span>
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">The Mindset Shift: How Linux Differs from Windows 🧠</h1>
+        <p class="mt-3 text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
+          The number one mistake people make when moving to Linux is treating it like <em>"Free Windows"</em>.
+          Linux isn't just an alternative skin for Windows — it operates on completely different principles.
+          Once you understand these five mental shifts, Linux goes from feeling weird to feeling wonderfully liberating.
+        </p>
+      </div>
+
+      <!-- Quick Summary Card -->
+      <div class="rounded-win border border-win-accent/30 bg-win-accent/5 p-5 text-sm space-y-2">
+        <div class="font-bold text-win-accent flex items-center gap-2">
+          <span>💡</span><span>The 30-Second Translation</span>
+        </div>
+        <p class="text-neutral-600 dark:text-neutral-300">
+          In Windows, Microsoft decides what updates you get, where your settings hide in the Registry, and when your PC restarts.
+          In Linux, <strong>you own the machine</strong>. Everything is transparent, settings are plain text files, and software comes from verified repositories instead of random website downloads.
+        </p>
+      </div>
+
+      <!-- Shift 1: Software -->
+      <section class="space-y-4">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">📦</span>
+          <div>
+            <h2 class="text-2xl font-bold">1. Stop Googling for .exe Installers</h2>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400">Repositories &amp; App Stores vs. The Wild West of Web Downloads</p>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-4 text-sm">
+          <div class="p-4 rounded-win border border-red-500/20 bg-red-500/5 space-y-2">
+            <div class="font-semibold text-red-600 dark:text-red-400 flex items-center gap-1.5">
+              <span>🪟</span><span>The Windows Habit</span>
+            </div>
+            <p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Open browser &rarr; Search "VLC download" &rarr; Dodge 3 fake ad download buttons &rarr; Download <code>vlc_setup.exe</code> &rarr; Click Next, Next &rarr; Uncheck the bundled anti-virus trialware &rarr; Finish.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-win border border-term-green/30 bg-term-green/5 space-y-2">
+            <div class="font-semibold text-term-green flex items-center gap-1.5">
+              <span>🐧</span><span>The Linux Reality</span>
+            </div>
+            <p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Open the <strong>Software Manager</strong> &rarr; Search "VLC" &rarr; Click <strong>Install</strong>.
+              Done. It comes cryptographically signed from trusted distribution servers and updates automatically with the rest of your system!
+            </p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-win bg-win-card dark:bg-win-darkCard border border-black/5 dark:border-white/10 text-sm">
+          <h3 class="font-semibold text-base mb-1">What about apps like Spotify, Steam, and Discord?</h3>
+          <p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+            Linux uses universal app sandboxes called <strong>Flatpaks</strong> (via <a href="https://flathub.org" target="_blank" rel="noopener" class="text-win-accent underline font-semibold">Flathub</a>).
+            Most modern distros integrate Flathub right into their Software Center: click Install, and you get official builds of Steam, Discord, OBS, Chrome, and Spotify running safely sandboxed.
+          </p>
+        </div>
+      </section>
+
+      <!-- Shift 2: Filesystem -->
+      <section class="space-y-4">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">📁</span>
+          <div>
+            <h2 class="text-2xl font-bold">2. Goodbye Drive Letters (No More C:\ or D:\)</h2>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400">One Unified Root Tree vs. Disjointed Drive Letters</p>
+          </div>
+        </div>
+
+        <p class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+          In DOS and Windows, every hard disk, partition, or USB stick gets a letter: <code>C:\</code>, <code>D:\</code>, <code>E:\</code>.
+          Linux does not use drive letters. Instead, there is <strong>one single tree</strong> starting at <code>/</code> (pronounced <em>"root"</em>).
+        </p>
+
+        <!-- Visual tree diagram -->
+        <div class="rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard p-5 font-mono text-xs overflow-x-auto space-y-2">
+          <div class="text-win-accent font-bold font-sans text-sm mb-2">The Linux Unified Filesystem Tree:</div>
+          <div class="text-term-blue font-bold">/ (Root of everything)</div>
+          <div class="pl-4 border-l-2 border-neutral-300 dark:border-neutral-700 space-y-1">
+            <div>├── <span class="text-term-green font-semibold">home/</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="font-sans text-neutral-500 dark:text-neutral-400">&larr; Like C:\Users\</span></div>
+            <div class="pl-4 border-l border-neutral-300 dark:border-neutral-700">
+              <div>└── <span class="text-term-cyan font-semibold">camper/</span> &nbsp;&nbsp;&nbsp;<span class="font-sans text-neutral-500 dark:text-neutral-400">&larr; Your personal files (also called ~ or $HOME)</span></div>
+            </div>
+            <div>├── <span class="text-amber-500 font-semibold">etc/</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="font-sans text-neutral-500 dark:text-neutral-400">&larr; Configuration files (the Linux "Registry")</span></div>
+            <div>├── <span class="text-neutral-600 dark:text-neutral-400">media/</span> or <span class="text-neutral-600 dark:text-neutral-400">mnt/</span> <span class="font-sans text-neutral-500 dark:text-neutral-400">&larr; USB sticks and extra hard drives attach here as folders!</span></div>
+            <div>└── <span class="text-neutral-600 dark:text-neutral-400">usr/bin/</span> &nbsp;&nbsp;&nbsp;<span class="font-sans text-neutral-500 dark:text-neutral-400">&larr; Program executables (like C:\Program Files\)</span></div>
+          </div>
+        </div>
+
+        <p class="text-xs text-neutral-500 dark:text-neutral-400">
+          💡 When you plug in a flash drive or secondary SSD, Linux simply "mounts" it into a folder (e.g. <code>/media/camper/MyGames</code>). It's all part of one seamless tree!
+        </p>
+      </section>
+
+      <!-- Shift 3: Registry vs Text Files -->
+      <section class="space-y-4">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">📝</span>
+          <div>
+            <h2 class="text-2xl font-bold">3. No Mysterious Windows Registry</h2>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400">Everything is a Human-Readable File</p>
+          </div>
+        </div>
+
+        <p class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+          Windows stores thousands of system settings in a massive, fragile binary database called the <strong>Registry</strong> (<code>regedit</code>). If a key gets corrupted, your PC can fail to boot.
+        </p>
+        <p class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+          In Linux: <strong>"Everything is a file"</strong>. Settings are plain, simple text files you can open and read in any text editor.
+        </p>
+
+        <div class="grid sm:grid-cols-2 gap-4 text-xs">
+          <div class="p-3.5 rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard">
+            <strong class="text-neutral-800 dark:text-neutral-200">System-wide configs live in <code>/etc/</code></strong>
+            <p class="mt-1 text-neutral-500 dark:text-neutral-400">Network settings, system services, and boot options are text files. Backing up a config means just copying a file!</p>
+          </div>
+          <div class="p-3.5 rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard">
+            <strong class="text-neutral-800 dark:text-neutral-200">Your app configs live in <code>~/.config/</code></strong>
+            <p class="mt-1 text-neutral-500 dark:text-neutral-400">Your personal browser shortcuts, window themes, and game saves are in your home folder. Want to move to a new PC? Copy your home folder and all your settings are preserved!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Shift 4: Updates & Reboots -->
+      <section class="space-y-4">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">🔄</span>
+          <div>
+            <h2 class="text-2xl font-bold">4. Updates That Respect Your Time</h2>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400">No Forced Reboots, No Interruptions</p>
+          </div>
+        </div>
+
+        <div class="p-5 rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard space-y-3 text-sm">
+          <p class="text-neutral-600 dark:text-neutral-300 leading-relaxed">
+            Every Windows user has experienced this agony: you're 5 minutes away from a presentation, and Windows declares:
+            <em class="text-win-accent font-semibold">"Working on updates 12% — Do not turn off your computer"</em>.
+          </p>
+          <div class="p-3 rounded-win bg-term-green/10 text-term-green text-xs font-semibold">
+            In Linux, the system NEVER forces a reboot on you. Ever.
+          </div>
+          <p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+            Linux can update running software in memory without restarting. You can update your web browser while using it, update your graphics drivers, or install system patches. The only time a reboot is ever recommended is when updating the core Linux kernel itself — and you reboot strictly when <em>you</em> feel like it.
+          </p>
+        </div>
+      </section>
+
+      <!-- Shift 5: Security & sudo -->
+      <section class="space-y-4">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">🔑</span>
+          <div>
+            <h2 class="text-2xl font-bold">5. Permissions &amp; Sudo (You Hold the Keys)</h2>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400">Why Linux Doesn't Need Anti-Virus Software</p>
+          </div>
+        </div>
+
+        <p class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+          On Windows, many programs run with broad permissions or trigger nagging "User Account Control" popups that people blindly click "Yes" to.
+          On Linux, by default, <strong>nothing can touch the operating system files</strong> without your explicit administrator password.
+        </p>
+
+        <div class="rounded-win border border-black/5 dark:border-white/10 bg-black/5 dark:bg-white/5 p-4 text-xs space-y-2">
+          <div class="font-semibold text-neutral-800 dark:text-neutral-200">Meet <code>sudo</code> ("SuperUser DO")</div>
+          <p class="text-neutral-600 dark:text-neutral-300 leading-relaxed">
+            Whenever you need to install system software or edit a global config, you prefix the command with <code>sudo</code>. It temporarily grants administrator power for that single command. If malware ever sneaks in through a downloaded file, it cannot modify your OS because it doesn't have your password!
+          </p>
+        </div>
+      </section>
+
+      <!-- Comparison Summary Table -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold">The Windows &harr; Linux Cheat Sheet</h2>
+        <div class="overflow-x-auto rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard shadow-sm">
+          <table class="w-full text-xs">
+            <thead>
+              <tr class="text-left border-b border-black/5 dark:border-white/10 bg-black/5 dark:bg-white/5">
+                <th class="p-3 font-semibold">Concept</th>
+                <th class="p-3 font-semibold">Windows</th>
+                <th class="p-3 font-semibold text-term-green">Linux</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-black/5 dark:divide-white/5">
+              <tr>
+                <td class="p-3 font-semibold">Installing apps</td>
+                <td class="p-3 text-neutral-500">Google search &rarr; download .exe</td>
+                <td class="p-3 text-term-green font-medium">Software Manager, Flathub, or Package Manager</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold">Drive system</td>
+                <td class="p-3 text-neutral-500">Letters (C:\, D:\, E:\)</td>
+                <td class="p-3 text-term-green font-medium">Single tree starting at / (mounted folders)</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold">Configuration</td>
+                <td class="p-3 text-neutral-500">Windows Registry (regedit)</td>
+                <td class="p-3 text-term-green font-medium">Plain text files in /etc/ and ~/.config/</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold">Your files</td>
+                <td class="p-3 text-neutral-500">C:\Users\&lt;You&gt;</td>
+                <td class="p-3 text-term-green font-medium">/home/&lt;you&gt; (abbreviated as ~)</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold">System updates</td>
+                <td class="p-3 text-neutral-500">Forced reboots &amp; interruptions</td>
+                <td class="p-3 text-term-green font-medium">Silent background updates; reboot on your schedule</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold">Admin privileges</td>
+                <td class="p-3 text-neutral-500">UAC popup ("Yes / No")</td>
+                <td class="p-3 text-term-green font-medium"><code>sudo</code> + your password</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Interactive Checkpoint Quiz -->
+      <section class="pt-4" x-data="{
+          q1: null,
+          q2: null,
+          q3: null,
+          submitted: false,
+          get score() {
+            let s = 0;
+            if (this.q1 === 'repo') s++;
+            if (this.q2 === 'home') s++;
+            if (this.q3 === 'control') s++;
+            return s;
+          },
+          get allCorrect() { return this.score === 3; },
+          completeLesson() {
+            CampProgress.complete('1.1');
+          }
+        }">
+        <div class="rounded-win border border-win-accent/30 bg-win-card dark:bg-win-darkCard p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl">🎓</span>
+            <div>
+              <h2 class="text-lg font-bold">Mindset Shift Checkpoint</h2>
+              <p class="text-xs text-neutral-500 dark:text-neutral-400">Lock in your new mental model to earn this lesson's badge.</p>
+            </div>
+          </div>
+
+          <div class="space-y-5 text-sm">
+            <!-- Q1 -->
+            <div>
+              <p class="font-semibold">1. How should you install new apps in Linux?</p>
+              <div class="mt-2 space-y-1.5 text-xs">
+                <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                  <input type="radio" name="q1" value="google" x-model="q1" class="text-win-accent">
+                  <span>Search Google and download whatever .exe files look official.</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                  <input type="radio" name="q1" value="repo" x-model="q1" class="text-win-accent">
+                  <span>Use the built-in Software Manager, Flathub, or your distro's repository!</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Q2 -->
+            <div>
+              <p class="font-semibold">2. Where do your personal documents, music, and downloads live?</p>
+              <div class="mt-2 space-y-1.5 text-xs">
+                <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                  <input type="radio" name="q2" value="c" x-model="q2" class="text-win-accent">
+                  <span>In C:\Users\MyName\</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                  <input type="radio" name="q2" value="home" x-model="q2" class="text-win-accent">
+                  <span>In /home/username/ (also known as ~ or your home directory)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Q3 -->
+            <div>
+              <p class="font-semibold">3. When Linux installs an update, what happens to your PC?</p>
+              <div class="mt-2 space-y-1.5 text-xs">
+                <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                  <input type="radio" name="q3" value="force" x-model="q3" class="text-win-accent">
+                  <span>It shuts down immediately and locks you out until it reaches 100%.</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                  <input type="radio" name="q3" value="control" x-model="q3" class="text-win-accent">
+                  <span>It updates smoothly in the background; you choose when or if to reboot!</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="pt-4 border-t border-black/5 dark:border-white/10 flex flex-wrap items-center justify-between gap-3">
+              <button @click="submitted = true; if (allCorrect) completeLesson();"
+                class="bg-win-accent hover:bg-win-accentHover text-white font-semibold text-xs px-4 py-2 rounded-win transition shadow-sm">
+                Check my answers
+              </button>
+
+              <div x-show="submitted" class="text-xs">
+                <template x-if="allCorrect">
+                  <span class="text-term-green font-semibold">🎉 All 3 correct! Mindset shift unlocked. Badge earned!</span>
+                </template>
+                <template x-if="!allCorrect">
+                  <span class="text-red-500 font-semibold" x-text="`Score: ${score}/3. Review the answers and try again!`"></span>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completion status badge -->
+        <div x-data="{ done: CampProgress.isDone('1.1') }"
+             x-init="document.addEventListener('camp:progress', () => done = CampProgress.isDone('1.1'))"
+             class="mt-4 rounded-win border p-4 text-sm flex items-center justify-between gap-3"
+             :class="done ? 'border-term-green/40 bg-term-green/5' : 'border-black/10 dark:border-white/10'">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl" x-text="done ? '🏅' : '🎯'"></span>
+            <div>
+              <span x-show="!done" class="font-medium">Complete the checkpoint above to earn the Mindset badge.</span>
+              <span x-show="done" class="font-semibold text-term-green">Lesson 1.1 complete — Mindset badge earned!</span>
+            </div>
+          </div>
+          <button x-show="!done" @click="CampProgress.complete('1.1')"
+            class="text-xs text-neutral-500 hover:text-win-accent underline">
+            Mark as complete
+          </button>
+        </div>
+      </section>
+
+      <!-- Pager -->
+      <div class="pt-6 flex justify-between text-sm">
+        <a href="../00-try-safely/01-live-usb-ventoy.html" class="px-4 py-2 rounded-win border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/10 transition font-medium">
+          ← 0.1 Live USB &amp; Ventoy
+        </a>
+        <a href="../index.html" class="px-4 py-2 rounded-win bg-win-accent text-white font-medium hover:bg-win-accentHover transition shadow-sm">
+          2. The Distro Guide →
+        </a>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-black/5 dark:border-white/10 mt-12">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-neutral-500 dark:text-neutral-400 flex flex-wrap gap-4 justify-between">
+      <span>🏕️ The Linux Learning Camp for Windows Refugees</span>
+      <span>Lesson 1.1 · The Mindset Shift</span>
+    </div>
+  </footer>
+
+</body>
+</html>
+
