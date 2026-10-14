@@ -18,7 +18,7 @@ with `cmd.exe` or PowerShell helps, and the course explicitly maps familiar Wind
 
 0. **Try Linux safely** — Live USB (Ventoy), virtual machines, WSL as a stepping stone
 1. **The Mindset Shift** — how Linux differs from Windows (no `.exe`, no Registry, repositories instead of installers, permissions, updates)
-2. **The Distro Decision Guide** — pick your daily driver (Windows refugee twin, gaming/Nvidia, old hardware, and the 3 package manager families: Debian, Fedora, Arch)
+2. **The Distro Decision Guide** — the 3 families in 2 minutes (Debian, Fedora, Arch) & choose your daily driver (Windows refugee twin, gaming/Nvidia, old hardware)
 3. **Install Linux**
    - 3.1 Drivers (included vs. manual, e.g. Nvidia)
    - 3.2 Package managers (third party, Flatpak)

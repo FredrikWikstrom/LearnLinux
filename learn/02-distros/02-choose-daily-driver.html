@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.2 Choose Your Daily Driver — Linux Learning Camp</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            win: { accent: '#0067c0', accentHover: '#1975c5', bg: '#f3f3f3', darkBg: '#202020', card: '#fbfbfb', darkCard: '#2b2b2b' },
+            term: { green: '#16c60c', blue: '#3b78ff', cyan: '#4cc2ff' },
+          },
+          borderRadius: { win: '8px' },
+          fontFamily: {
+            sans: ['"Segoe UI Variable Text"', '"Segoe UI"', 'system-ui', 'sans-serif'],
+            mono: ['"Cascadia Code"', '"Cascadia Mono"', 'Consolas', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="../../assets/css/app.css">
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script src="../../assets/js/terminal.js"></script>
+</head>
+<body class="bg-win-bg dark:bg-win-darkBg text-neutral-900 dark:text-neutral-100 font-sans antialiased" hx-boost="true">
+
+  <!-- Header -->
+  <header class="acrylic sticky top-0 z-40 border-b border-black/5 dark:border-white/10">
+    <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="../../index.html" class="flex items-center gap-2 font-semibold">
+        <span class="text-xl">🏕️</span><span>Linux Learning Camp</span>
+      </a>
+      <nav class="flex items-center gap-1 text-sm">
+        <a href="../../index.html" class="px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">Home</a>
+        <a href="../index.html" class="px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">Learning path</a>
+        <button onclick="CampTheme.toggle()" aria-label="Toggle theme"
+          class="ml-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition">
+          <span class="dark:hidden">🌙</span><span class="hidden dark:inline">☀️</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-4 py-10 grid lg:grid-cols-[16rem_1fr] gap-8">
+
+    <!-- Sidebar -->
+    <aside class="hidden lg:block">
+      <nav class="sticky top-20 space-y-1 text-sm">
+        <div class="text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400 px-3 mb-2">2. Distro Decision Guide</div>
+        <a href="01-three-families.html" class="block px-3 py-2 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition text-neutral-600 dark:text-neutral-300">2.1 The 3 families in 2 min</a>
+        <a href="#" class="block px-3 py-2 rounded-win bg-win-accent/10 text-win-accent font-semibold border-l-4 border-win-accent">2.2 Choose daily driver</a>
+        <div class="pt-4 border-t border-black/5 dark:border-white/10 mt-4 space-y-1">
+          <div class="text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400 px-3 mb-2">Previous &amp; Next</div>
+          <a href="01-three-families.html" class="block px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition text-neutral-600 dark:text-neutral-300">← 2.1 The 3 families in 2 min</a>
+          <a href="../index.html" class="block px-3 py-1.5 rounded-win hover:bg-black/5 dark:hover:bg-white/10 transition text-neutral-600 dark:text-neutral-300">All camp topics</a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <article class="prose-lesson max-w-3xl space-y-8">
+
+      <!-- Breadcrumbs -->
+      <div class="flex flex-wrap items-center gap-2 text-sm">
+        <a href="../index.html" class="text-win-accent hover:underline">Learning path</a>
+        <span class="text-neutral-400">/</span>
+        <span class="text-neutral-500 dark:text-neutral-400">2. Distro Decision Guide</span>
+      </div>
+
+      <!-- Title & Hook -->
+      <div>
+        <span class="inline-block text-xs font-semibold uppercase tracking-wide text-win-accent bg-win-accent/10 px-2.5 py-1 rounded-full mb-3">Lesson 2.2</span>
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">Choose Your Daily Driver: Curing Distro Paralysis 🎯</h1>
+        <p class="mt-3 text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
+          Now that you know the 3 great families (Debian/Ubuntu, Fedora, Arch), it is time to choose your specific ride.
+          In Windows, you get Windows 10 or Windows 11. In Linux, there are over <strong>600 distributions</strong>,
+          and beginners often freeze: <em>"What if I choose the wrong one and waste 20 hours?"</em>
+        </p>
+        <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+          Take a deep breath. Under the hood, <strong>95% of Linux is identical everywhere</strong>. The terminal commands, the filesystem structure,
+          and the software you run are the same. You aren't picking a religion — you are just picking a starter car.
+        </p>
+      </div>
+
+      <!-- Golden Rule Card -->
+      <div class="rounded-win border border-win-accent/30 bg-win-accent/5 p-5 text-sm space-y-2">
+        <div class="font-bold text-win-accent flex items-center gap-2">
+          <span>💡</span><span>The Golden Rule for Windows Refugees</span>
+        </div>
+        <p class="text-neutral-600 dark:text-neutral-300">
+          Do not install Arch Linux, Gentoo, or a niche hacker distro on your first week.
+          Start with a distribution designed for people coming from Windows. You can always change later in 15 minutes without losing your personal files.
+        </p>
+      </div>
+
+      <!-- Section: Cockpit vs Engine -->
+      <section class="space-y-4">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">🧩</span>
+          <div>
+            <h2 class="text-2xl font-bold">The Key Insight: The Engine vs. The Cockpit</h2>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400">Why Linux isn't tied to one single look</p>
+          </div>
+        </div>
+
+        <p class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+          On Windows, the operating system and the visual interface are glued together.
+          On Linux, they are completely separate components:
+        </p>
+
+        <div class="grid sm:grid-cols-2 gap-4 text-sm">
+          <div class="bg-win-card dark:bg-win-darkCard p-4 rounded-win border border-black/5 dark:border-white/10 space-y-2">
+            <div class="font-semibold text-win-accent flex items-center gap-2">
+              <span>⚙️</span><span>The Distribution (The Engine)</span>
+            </div>
+            <p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Handles the Linux kernel, hardware drivers, system security, and the package manager (how apps install and update).
+              Examples: <strong>Ubuntu</strong>, <strong>Fedora</strong>, <strong>Debian</strong>, <strong>Arch</strong>.
+            </p>
+          </div>
+
+          <div class="bg-win-card dark:bg-win-darkCard p-4 rounded-win border border-black/5 dark:border-white/10 space-y-2">
+            <div class="font-semibold text-term-green flex items-center gap-2">
+              <span>🖥️</span><span>The Desktop Environment (The Cockpit)</span>
+            </div>
+            <p class="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              The graphical shell: window borders, the taskbar, start menu, system tray, and file manager.
+              Examples: <strong>Cinnamon</strong>, <strong>KDE Plasma</strong>, <strong>GNOME</strong>, <strong>XFCE</strong>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Desktop Environment Showcase -->
+        <div class="p-4 rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard space-y-3 text-sm">
+          <h3 class="font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+            <span>🎨</span><span>Which Cockpit Fits Your Windows Muscle Memory?</span>
+          </h3>
+          <div class="grid sm:grid-cols-2 gap-3 text-xs">
+            <div class="p-3 rounded-win bg-black/5 dark:bg-white/5 space-y-1">
+              <div class="font-semibold text-win-accent">Cinnamon (The Windows 7/10 Twin)</div>
+              <p class="text-neutral-600 dark:text-neutral-300">
+                Start menu bottom-left, taskbar on bottom, system tray on bottom-right. Zero learning curve for anyone who has ever used a PC.
+                Default on <strong>Linux Mint</strong>.
+              </p>
+            </div>
+            <div class="p-3 rounded-win bg-black/5 dark:bg-white/5 space-y-1">
+              <div class="font-semibold text-term-blue">KDE Plasma (The Customization Beast)</div>
+              <p class="text-neutral-600 dark:text-neutral-300">
+                Looks like Windows 11 by default, but every widget, animation, and panel can be customized. Light on RAM and supports fractional scaling.
+                Available on <strong>Kubuntu</strong>, <strong>Fedora KDE</strong>, <strong>CachyOS</strong>.
+              </p>
+            </div>
+            <div class="p-3 rounded-win bg-black/5 dark:bg-white/5 space-y-1">
+              <div class="font-semibold text-purple-600 dark:text-purple-400">GNOME (The Modern Touch &amp; Gesture Shell)</div>
+              <p class="text-neutral-600 dark:text-neutral-300">
+                No traditional taskbar. Clean, distraction-free, with a top bar, smooth trackpad gestures, and a full-screen app grid.
+                Default on <strong>Ubuntu</strong> and <strong>Fedora Workstation</strong>.
+              </p>
+            </div>
+            <div class="p-3 rounded-win bg-black/5 dark:bg-white/5 space-y-1">
+              <div class="font-semibold text-amber-600 dark:text-amber-400">XFCE (The Featherweight Potato Saver)</div>
+              <p class="text-neutral-600 dark:text-neutral-300">
+                Ultra-fast, uses under 600MB of RAM. Turns an aging 10-year-old Core i3 laptop into a snappy, responsive daily driver.
+                Available on <strong>Linux Mint XFCE</strong> and <strong>Xubuntu</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: The 4 Refugee Archetypes -->
+      <section class="space-y-6">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">🏆</span>
+          <div>
+            <h2 class="text-2xl font-bold">The Top 4 Refugee Recommendations</h2>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400">Tested, reliable, and beginner-approved</p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+
+          <!-- 1. Linux Mint -->
+          <div class="p-5 rounded-win border border-term-green/30 bg-win-card dark:bg-win-darkCard shadow-sm space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">🌱</span>
+                <div>
+                  <h3 class="font-bold text-lg">1. Linux Mint (Cinnamon) — "The Undisputed King for Refugees"</h3>
+                  <span class="text-xs text-term-green font-semibold">Best overall recommendation for 85% of switchers</span>
+                </div>
+              </div>
+              <a href="https://linuxmint.com/download.php" target="_blank" rel="noopener"
+                 class="text-xs bg-term-green/10 text-term-green hover:bg-term-green/20 px-3 py-1.5 rounded-win font-semibold transition">
+                Download Mint ISO ↗
+              </a>
+            </div>
+            <p class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              If you want your computer to just work without having to relearn where buttons are, <strong>Linux Mint</strong> is the gold standard.
+              It comes with sensible defaults, multimedia codecs pre-installed, an Update Manager that never restarts without your permission,
+              and a Driver Manager that finds your Wi-Fi and graphics card with one click.
+            </p>
+            <div class="grid sm:grid-cols-2 gap-3 text-xs pt-2">
+              <div class="bg-term-green/5 p-2.5 rounded-win border border-term-green/20">
+                <strong class="text-term-green">Why Windows users love it:</strong>
+                <ul class="list-disc list-inside mt-1 space-y-0.5 text-neutral-600 dark:text-neutral-300">
+                  <li>Start menu &amp; taskbar identical to Windows</li>
+                  <li>Software Manager includes Flathub out-of-the-box</li>
+                  <li>Timeshift snapshot tool built-in for 1-click restore</li>
+                </ul>
+              </div>
+              <div class="bg-black/5 dark:bg-white/5 p-2.5 rounded-win">
+                <strong class="text-neutral-700 dark:text-neutral-300">Good to know:</strong>
+                <p class="mt-1 text-neutral-500 dark:text-neutral-400">
+                  Based on Ubuntu LTS (Debian family). Doesn't have the bleeding-latest kernel by default, but you can choose the "EDGE" edition for newest hardware.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Zorin OS -->
+          <div class="p-5 rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard shadow-sm space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">✨</span>
+                <div>
+                  <h3 class="font-bold text-lg">2. Zorin OS — "The Windows 11 Chameleon"</h3>
+                  <span class="text-xs text-win-accent font-semibold">Best for design lovers &amp; polished aesthetics</span>
+                </div>
+              </div>
+              <a href="https://zorin.com/os/download/" target="_blank" rel="noopener"
+                 class="text-xs bg-win-accent/10 text-win-accent hover:bg-win-accent/20 px-3 py-1.5 rounded-win font-semibold transition">
+                Download Zorin ISO ↗
+              </a>
+            </div>
+            <p class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              Zorin OS is specifically designed to make PC switchers feel at home. It features the famous <strong>Zorin Appearance</strong> tool:
+              with a single click, you can switch the interface layout between Windows 11 centered icons, Windows Classic (XP/7) left taskbar,
+              or macOS dock style. It also detects Windows <code>.exe</code> installers and offers to run them through WINE automatically.
+            </p>
+          </div>
+
+          <!-- 3. Pop!_OS & CachyOS (Gaming) -->
+          <div class="p-5 rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard shadow-sm space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">🎮</span>
+                <div>
+                  <h3 class="font-bold text-lg">3. Pop!_OS &amp; CachyOS — "The PC Gamer &amp; Nvidia Champions"</h3>
+                  <span class="text-xs text-purple-600 dark:text-purple-400 font-semibold">Best for Steam, Discord, and Nvidia GPUs</span>
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <a href="https://system76.com/pop" target="_blank" rel="noopener"
+                   class="text-xs bg-purple-600/10 text-purple-600 dark:text-purple-400 hover:bg-purple-600/20 px-3 py-1.5 rounded-win font-semibold transition">
+                  Pop!_OS ↗
+                </a>
+                <a href="https://cachyos.org/download/" target="_blank" rel="noopener"
+                   class="text-xs bg-purple-600/10 text-purple-600 dark:text-purple-400 hover:bg-purple-600/20 px-3 py-1.5 rounded-win font-semibold transition">
+                  CachyOS ↗
+                </a>
+              </div>
+            </div>
+            <p class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              If your PC has a dedicated <strong>Nvidia graphics card</strong> or you spend your evenings on Steam:
+            </p>
+            <ul class="text-xs space-y-2 text-neutral-600 dark:text-neutral-300 list-disc list-inside">
+              <li>
+                <strong>Pop!_OS (by System76):</strong> Offers a dedicated <em>"Nvidia ISO"</em> with proprietary GPU drivers baked into the installer.
+                Zero terminal commands needed to get 144Hz monitors and Steam Proton games flying.
+              </li>
+              <li>
+                <strong>CachyOS:</strong> An Arch-based speed powerhouse built for gaming. Pre-configured with custom gaming kernels (BORE scheduler),
+                Proton GE, and a 1-click gaming meta-installer for Steam, Lutris, and Heroic Games Launcher.
+              </li>
+            </ul>
+          </div>
+
+          <!-- 4. Fedora & Ubuntu/Kubuntu -->
+          <div class="p-5 rounded-win border border-black/5 dark:border-white/10 bg-win-card dark:bg-win-darkCard shadow-sm space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">🎩</span>
+                <div>
+                  <h3 class="font-bold text-lg">4. Fedora &amp; Ubuntu / Kubuntu — "The Industry Standards"</h3>
+                  <span class="text-xs text-win-accent font-semibold">Best for developers, modern hardware &amp; documentation</span>
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <a href="https://fedoraproject.org/workstation/" target="_blank" rel="noopener"
+                   class="text-xs bg-win-accent/10 text-win-accent hover:bg-win-accent/20 px-3 py-1.5 rounded-win font-semibold transition">
+                  Fedora ↗
+                </a>
+                <a href="https://kubuntu.org/getkubuntu/" target="_blank" rel="noopener"
+                   class="text-xs bg-win-accent/10 text-win-accent hover:bg-win-accent/20 px-3 py-1.5 rounded-win font-semibold transition">
+                  Kubuntu ↗
+                </a>
+              </div>
+            </div>
+            <p class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+              <strong>Fedora</strong> (backed by Red Hat) gives you pure, modern Linux with the latest kernel and clean Wayland display server.
+              Prefer a Windows-like feel? The <a href="https://fedoraproject.org/spins/kde/" target="_blank" rel="noopener" class="text-win-accent underline">Fedora KDE Spin</a> combines Fedora's cutting-edge core with the KDE Plasma desktop.
+              Meanwhile, <strong>Ubuntu</strong> and <strong>Kubuntu</strong> have the largest community on Earth: if you ever hit an issue,
+              chances are thousands of people have already solved it on AskUbuntu or Reddit.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Section: Interactive Distro Matchmaker -->
+      <section class="space-y-4">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">🧙‍♂️</span>
+          <div>
+            <h2 class="text-2xl font-bold">Interactive Distro Matchmaker</h2>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400">Answer 3 questions to find your personalized match</p>
+          </div>
+        </div>
+
+        <div x-data="{
+          hardware: 'modern',
+          priority: 'familiar',
+          desktopStyle: 'taskbar',
+          getMatch() {
+            if (this.hardware === 'old') {
+              return {
+                name: 'Linux Mint (XFCE Edition)',
+                badge: 'Potato Reviver 🥔',
+                badgeColor: 'text-amber-600 bg-amber-500/10 border-amber-500/30',
+                reason: 'Your older hardware needs an ultra-lightweight desktop that uses under 600MB of RAM while keeping the familiar Windows layout.',
+                download: 'https://linuxmint.com/download.php',
+                alt: 'Also consider Lubuntu or MX Linux.'
+              };
+            }
+            if (this.priority === 'gaming' || this.hardware === 'nvidia') {
+              return {
+                name: 'Pop!_OS (Nvidia ISO) or CachyOS',
+                badge: 'Gamer Champion 🎮',
+                badgeColor: 'text-purple-600 bg-purple-500/10 border-purple-500/30',
+                reason: 'Pre-packaged Nvidia proprietary graphics drivers, hybrid GPU switching for laptops, and first-class Steam Proton optimization.',
+                download: 'https://system76.com/pop',
+                alt: 'Choose Pop!_OS for fixed stability, or CachyOS for high-refresh bleeding-edge speed.'
+              };
+            }
+            if (this.priority === 'developer' && this.desktopStyle === 'modern') {
+              return {
+                name: 'Fedora Workstation (GNOME)',
+                badge: 'Modern Polish 🎩',
+                badgeColor: 'text-win-accent bg-win-accent/10 border-win-accent/30',
+                reason: 'The latest Linux kernel, pure Wayland display server, Flatpak container support, and a clean, distraction-free modern interface.',
+                download: 'https://fedoraproject.org/workstation/',
+                alt: 'Want a Windows taskbar instead? Grab the Fedora KDE Spin!'
+              };
+            }
+            if (this.desktopStyle === 'custom') {
+              return {
+                name: 'Kubuntu (or Fedora KDE)',
+                badge: 'Customization Powerhouse 🎨',
+                badgeColor: 'text-term-blue bg-term-blue/10 border-term-blue/30',
+                reason: 'KDE Plasma gives you a familiar Windows layout out-of-the-box, with limitless powers to tweak widgets, panels, and appearance.',
+                download: 'https://kubuntu.org/getkubuntu/',
+                alt: 'Also look at Tuxedo OS or CachyOS KDE.'
+              };
+            }
+            // Default: Linux Mint
+            return {
+              name: 'Linux Mint (Cinnamon Edition)',
+              badge: 'Refugee Perfect Match 🏆',
+              badgeColor: 'text-term-green bg-term-green/10 border-term-green/30',
+              reason: 'Zero learning curve from Windows 10/11. Start menu in the corner, taskbar on the bottom, safe automatic updates, and rock-solid Ubuntu LTS foundation.',
+              download: 'https://linuxmint.com/download.php',
+              alt: 'If you want a modern Windows 11 style centered taskbar, try Zorin OS!'
+            };
+          }
+        }" class="bg-win-card dark:bg-win-darkCard p-6 rounded-win border border-black/5 dark:border-white/10 shadow-sm space-y-6">
+
+          <!-- Q1 -->
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
+              1. What PC are you putting Linux on?
+            </label>
+            <div class="grid sm:grid-cols-3 gap-2">
+              <button type="button" @click="hardware = 'modern'"
+                :class="hardware === 'modern' ? 'border-win-accent bg-win-accent/10 font-semibold text-win-accent' : 'border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5'"
+                class="p-3 text-left rounded-win border text-xs transition">
+                <span class="block text-base mb-1">💻</span>
+                Modern PC or Laptop
+              </button>
+              <button type="button" @click="hardware = 'nvidia'"
+                :class="hardware === 'nvidia' ? 'border-win-accent bg-win-accent/10 font-semibold text-win-accent' : 'border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5'"
+                class="p-3 text-left rounded-win border text-xs transition">
+                <span class="block text-base mb-1">⚡</span>
+                Gaming PC with Nvidia GPU
+              </button>
+              <button type="button" @click="hardware = 'old'"
+                :class="hardware === 'old' ? 'border-win-accent bg-win-accent/10 font-semibold text-win-accent' : 'border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5'"
+                class="p-3 text-left rounded-win border text-xs transition">
+                <span class="block text-base mb-1">🥔</span>
+                Older Laptop (&lt; 8GB RAM)
+              </button>
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
+              2. What is your #1 priority?
+            </label>
+            <div class="grid sm:grid-cols-3 gap-2">
+              <button type="button" @click="priority = 'familiar'"
+                :class="priority === 'familiar' ? 'border-win-accent bg-win-accent/10 font-semibold text-win-accent' : 'border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5'"
+                class="p-3 text-left rounded-win border text-xs transition">
+                <span class="block text-base mb-1">🪟</span>
+                Familiarity (Zero hassle)
+              </button>
+              <button type="button" @click="priority = 'gaming'"
+                :class="priority === 'gaming' ? 'border-win-accent bg-win-accent/10 font-semibold text-win-accent' : 'border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5'"
+                class="p-3 text-left rounded-win border text-xs transition">
+                <span class="block text-base mb-1">🎮</span>
+                PC Gaming &amp; Steam
+              </button>
+              <button type="button" @click="priority = 'developer'"
+                :class="priority === 'developer' ? 'border-win-accent bg-win-accent/10 font-semibold text-win-accent' : 'border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5'"
+                class="p-3 text-left rounded-win border text-xs transition">
+                <span class="block text-base mb-1">🚀</span>
+                Modern Dev &amp; Latest Tech
+              </button>
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
+              3. How do you want your desktop arranged?
+            </label>
+            <div class="grid sm:grid-cols-3 gap-2">
+              <button type="button" @click="desktopStyle = 'taskbar'"
+                :class="desktopStyle === 'taskbar' ? 'border-win-accent bg-win-accent/10 font-semibold text-win-accent' : 'border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5'"
+                class="p-3 text-left rounded-win border text-xs transition">
+                <span class="block text-base mb-1">📋</span>
+                Classic taskbar on bottom
+              </button>
+              <button type="button" @click="desktopStyle = 'custom'"
+                :class="desktopStyle === 'custom' ? 'border-win-accent bg-win-accent/10 font-semibold text-win-accent' : 'border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5'"
+                class="p-3 text-left rounded-win border text-xs transition">
+                <span class="block text-base mb-1">🛠️</span>
+                Full control &amp; customization
+              </button>
+              <button type="button" @click="desktopStyle = 'modern'"
+                :class="desktopStyle === 'modern' ? 'border-win-accent bg-win-accent/10 font-semibold text-win-accent' : 'border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5'"
+                class="p-3 text-left rounded-win border text-xs transition">
+                <span class="block text-base mb-1">✨</span>
+                Modern &amp; gesture-driven
+              </button>
+            </div>
+          </div>
+
+          <!-- Result card -->
+          <div class="p-5 rounded-win border border-win-accent/40 bg-win-accent/5 space-y-3 transition-all duration-200">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="text-xs uppercase font-semibold text-neutral-500 dark:text-neutral-400 tracking-wider">Your Personalized Match</span>
+                <h3 class="text-xl font-bold text-neutral-900 dark:text-neutral-100" x-text="getMatch().name"></h3>
+              </div>
+              <span class="px-3 py-1 rounded-full text-xs font-semibold border"
+                    :class="getMatch().badgeColor" x-text="getMatch().badge"></span>
+            </div>
+            <p class="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed" x-text="getMatch().reason"></p>
+            <div class="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <span class="text-neutral-500 dark:text-neutral-400 italic" x-text="getMatch().alt"></span>
+              <a href="#" :href="getMatch().download" target="_blank" rel="noopener"
+                 class="bg-win-accent hover:bg-win-accentHover text-white font-semibold px-4 py-2 rounded-win transition shadow-sm">
+                Get ISO File ↗
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Comparison Matrix Table -->
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold">Quick Cheat Sheet: Popular Distros Side-by-Side</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-black/10 dark:border-white/10 text-neutral-500 dark:text-neutral-400 font-semibold">
+                <th class="py-2.5 px-3">Distro</th>
+                <th class="py-2.5 px-3">Default Desktop</th>
+                <th class="py-2.5 px-3">Base Family</th>
+                <th class="py-2.5 px-3">Update Cycle</th>
+                <th class="py-2.5 px-3">Best Suited For</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-black/5 dark:divide-white/5 text-neutral-700 dark:text-neutral-300">
+              <tr class="hover:bg-black/5 dark:hover:bg-white/5">
+                <td class="py-2.5 px-3 font-semibold text-term-green">Linux Mint</td>
+                <td class="py-2.5 px-3">Cinnamon</td>
+                <td class="py-2.5 px-3">Ubuntu / Debian</td>
+                <td class="py-2.5 px-3">LTS (2 Years)</td>
+                <td class="py-2.5 px-3">First-time Windows refugees wanting pure familiarity</td>
+              </tr>
+              <tr class="hover:bg-black/5 dark:hover:bg-white/5">
+                <td class="py-2.5 px-3 font-semibold text-win-accent">Zorin OS</td>
+                <td class="py-2.5 px-3">Zorin Desktop (GNOME)</td>
+                <td class="py-2.5 px-3">Ubuntu</td>
+                <td class="py-2.5 px-3">LTS (2 Years)</td>
+                <td class="py-2.5 px-3">Windows 11 lookalike switcher layout</td>
+              </tr>
+              <tr class="hover:bg-black/5 dark:hover:bg-white/5">
+                <td class="py-2.5 px-3 font-semibold text-purple-600 dark:text-purple-400">Pop!_OS</td>
+                <td class="py-2.5 px-3">COSMIC</td>
+                <td class="py-2.5 px-3">Ubuntu</td>
+                <td class="py-2.5 px-3">Regular / LTS</td>
+                <td class="py-2.5 px-3">Nvidia graphics, laptops &amp; PC gaming</td>
+              </tr>
+              <tr class="hover:bg-black/5 dark:hover:bg-white/5">
+                <td class="py-2.5 px-3 font-semibold text-win-accent">Fedora</td>
+                <td class="py-2.5 px-3">GNOME or KDE</td>
+                <td class="py-2.5 px-3">Fedora / Red Hat</td>
+                <td class="py-2.5 px-3">6 Months</td>
+                <td class="py-2.5 px-3">Developers, clean modern features &amp; latest kernels</td>
+              </tr>
+              <tr class="hover:bg-black/5 dark:hover:bg-white/5">
+                <td class="py-2.5 px-3 font-semibold text-term-blue">CachyOS</td>
+                <td class="py-2.5 px-3">KDE Plasma</td>
+                <td class="py-2.5 px-3">Arch Linux</td>
+                <td class="py-2.5 px-3">Rolling (Continuous)</td>
+                <td class="py-2.5 px-3">Maximum CPU/GPU gaming FPS &amp; latest Proton</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Interactive Checkpoint -->
+      <section class="space-y-4 pt-6">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">🎯</span>
+          <div>
+            <h2 class="text-2xl font-bold">Checkpoint: Test Your Distro Smarts</h2>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400">Answer all 3 to earn the Distro Pathfinder badge</p>
+          </div>
+        </div>
+
+        <div x-data="{
+          q1: '',
+          q2: '',
+          q3: '',
+          submitted: false,
+          get allCorrect() {
+            return this.q1 === 'mint' && this.q2 === 'de' && this.q3 === 'pop';
+          },
+          get score() {
+            let s = 0;
+            if (this.q1 === 'mint') s++;
+            if (this.q2 === 'de') s++;
+            if (this.q3 === 'pop') s++;
+            return s;
+          },
+          completeLesson() {
+            CampProgress.complete('2.2');
+          }
+        }" class="bg-win-card dark:bg-win-darkCard p-6 rounded-win border border-black/5 dark:border-white/10 shadow-sm space-y-6 text-sm">
+
+          <!-- Q1 -->
+          <div class="space-y-2">
+            <p class="font-semibold text-neutral-900 dark:text-neutral-100">
+              1. What is the #1 recommended distro for a Windows user who wants an identical taskbar and start menu with zero tweaking?
+            </p>
+            <div class="space-y-1.5 text-xs text-neutral-600 dark:text-neutral-300">
+              <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                <input type="radio" name="q1" value="arch" x-model="q1" class="text-win-accent">
+                <span>Arch Linux</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                <input type="radio" name="q1" value="mint" x-model="q1" class="text-win-accent">
+                <span>Linux Mint (Cinnamon Edition)</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                <input type="radio" name="q1" value="gentoo" x-model="q1" class="text-win-accent">
+                <span>Gentoo Linux</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="space-y-2">
+            <p class="font-semibold text-neutral-900 dark:text-neutral-100">
+              2. What is the fundamental difference between a Linux Distribution and a Desktop Environment?
+            </p>
+            <div class="space-y-1.5 text-xs text-neutral-600 dark:text-neutral-300">
+              <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                <input type="radio" name="q2" value="same" x-model="q2" class="text-win-accent">
+                <span>They are exact synonyms for the same thing.</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                <input type="radio" name="q2" value="de" x-model="q2" class="text-win-accent">
+                <span>The Distro manages the kernel and packages (engine); the Desktop Environment controls the visual interface (cockpit).</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                <input type="radio" name="q2" value="paid" x-model="q2" class="text-win-accent">
+                <span>Distros are free, but Desktop Environments require a monthly license.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="space-y-2">
+            <p class="font-semibold text-neutral-900 dark:text-neutral-100">
+              3. You have a gaming laptop with an Nvidia graphics card. Which distro provides a dedicated Nvidia installer ISO out-of-the-box?
+            </p>
+            <div class="space-y-1.5 text-xs text-neutral-600 dark:text-neutral-300">
+              <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                <input type="radio" name="q3" value="debian" x-model="q3" class="text-win-accent">
+                <span>Debian Minimal</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                <input type="radio" name="q3" value="pop" x-model="q3" class="text-win-accent">
+                <span>Pop!_OS (by System76)</span>
+              </label>
+              <label class="flex items-center gap-2 p-2 rounded-win hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer">
+                <input type="radio" name="q3" value="alpine" x-model="q3" class="text-win-accent">
+                <span>Alpine Linux</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="pt-4 border-t border-black/5 dark:border-white/10 flex flex-wrap items-center justify-between gap-3">
+            <button @click="submitted = true; if (allCorrect) completeLesson();"
+              class="bg-win-accent hover:bg-win-accentHover text-white font-semibold text-xs px-4 py-2 rounded-win transition shadow-sm">
+              Check my answers
+            </button>
+
+            <div x-show="submitted" class="text-xs">
+              <template x-if="allCorrect">
+                <span class="text-term-green font-semibold">🎉 All 3 correct! You're ready to pick your daily driver. Badge earned!</span>
+              </template>
+              <template x-if="!allCorrect">
+                <span class="text-red-500 font-semibold" x-text="`Score: ${score}/3. Check your answers and try again!`"></span>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completion status badge -->
+        <div x-data="{ done: CampProgress.isDone('2.2') }"
+             x-init="document.addEventListener('camp:progress', () => done = CampProgress.isDone('2.2'))"
+             class="mt-4 rounded-win border p-4 text-sm flex items-center justify-between gap-3"
+             :class="done ? 'border-term-green/40 bg-term-green/5' : 'border-black/10 dark:border-white/10'">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl" x-text="done ? '🏅' : '🎯'"></span>
+            <div>
+              <span x-show="!done" class="font-medium">Complete the checkpoint above to earn the Distro Pathfinder badge.</span>
+              <span x-show="done" class="font-semibold text-term-green">Lesson 2.2 complete — Distro Pathfinder badge earned! 🧭 Section 2 Completed!</span>
+            </div>
+          </div>
+          <button x-show="!done" @click="CampProgress.complete('2.2')"
+            class="text-xs text-neutral-500 hover:text-win-accent underline">
+            Mark as complete
+          </button>
+        </div>
+      </section>
+
+      <!-- Pager -->
+      <div class="pt-6 flex justify-between text-sm">
+        <a href="01-three-families.html" class="px-4 py-2 rounded-win border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/10 transition font-medium">
+          ← 2.1 The 3 families in 2 min
+        </a>
+        <a href="../index.html" class="px-4 py-2 rounded-win bg-win-accent text-white font-medium hover:bg-win-accentHover transition shadow-sm">
+          Next: 3.1 Drivers &amp; Hardware →
+        </a>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-black/5 dark:border-white/10 mt-12">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-neutral-500 dark:text-neutral-400 flex flex-wrap gap-4 justify-between">
+      <span>🏕️ The Linux Learning Camp for Windows Refugees</span>
+      <span>Lesson 2.2 · Choose your daily driver</span>
+    </div>
+  </footer>
+
+</body>
+</html>
+
